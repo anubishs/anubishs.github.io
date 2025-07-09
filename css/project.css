@@ -385,13 +385,16 @@
     max-width: 900px;
     position: relative;
     max-height: 90vh;
+    display: flex;
+    flex-direction: column;
     /* overflow: auto; */
 }
 
 .modal-image {
-    width: 100%;
+    max-width: 100%;
     height: auto;
     border-radius: 10px;
+    margin: 0 auto;
 }
 
 .image-caption {
