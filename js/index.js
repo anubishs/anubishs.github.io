@@ -1,0 +1,149 @@
+
+// Initialize particles.js
+particlesJS('particles-js', {
+    particles: {
+        number: {
+            value: 200,
+            density: {
+                enable: true,
+                value_area: 800
+            }
+        },
+        color: {
+            value: '#6c5ce7'
+        },
+        shape: {
+            type: 'triangle',
+            stroke: {
+                width: 2,
+                color: '#bcb8d7'
+            }
+        },
+        opacity: {
+            value: 0.5,
+            random: true,
+            anim: {
+                enable: true,
+                speed: 1,
+                opacity_min: 0.1,
+                sync: false
+            }
+        },
+        size: {
+            value: 3,
+            random: true,
+            anim: {
+                enable: true,
+                speed: 2,
+                size_min: 0.1,
+                sync: false
+            }
+        },
+        line_linked: {
+            enable: true,
+            distance: 50,
+            color: '#6c5ce7',
+            opacity: 0.4,
+            width: 2
+        },
+        move: {
+            enable: true,
+            speed: 1,
+            direction: 'none',
+            random: true,
+            straight: false,
+            out_mode: 'out',
+            bounce: false
+        }
+    },
+    interactivity: {
+        detect_on: 'canvas',
+        events: {
+            onhover: {
+                enable: true,
+                mode: 'grab'
+            },
+            onclick: {
+                enable: true,
+                mode: 'push'
+            },
+            resize: true
+        },
+        modes: {
+            grab: {
+                distance: 140,
+                line_linked: {
+                    opacity: 1
+                }
+            },
+            push: {
+                particles_nb: 4
+            }
+        }
+    },
+    retina_detect: true
+});
+
+// Smooth scrolling for navigation links
+$('a[href^="#"]').on('click', function(e) {
+    e.preventDefault();
+    const target = $(this.getAttribute('href'));
+    if (target.length) {
+        $('html, body').animate({
+            scrollTop: target.offset().top
+        }, 800);
+    }
+});
+// // jQuery version of the commented form submission
+// $('.contact-form form').on('submit', function(e) {
+//     e.preventDefault();
+    
+//     // Form validation
+//     const name = $('#name').val();
+//     const email = $('#email').val();
+//     const message = $('#message').val();
+    
+//     if (!name || !email || !message) {
+//         alert('Please fill in all required fields');
+//         return;
+//     }
+    
+//     // Simple email validation
+//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     if (!emailRegex.test(email)) {
+//         alert('Please enter a valid email address');
+//         return;
+//     }
+    
+//     // Here you would normally send the form data to your server
+//     // For now, we'll just show a success message
+//     alert('Message sent successfully! I\'ll get back to you soon.');
+//     this.reset();
+// });
+
+$(document).ready(function() {
+    // Load projects from JSON
+    fetch('data/projects.json')
+        .then(response => response.json())
+        .then(projects => {
+            const container = $('#projects-container');
+            container.html(projects.slice(0, 3).map(project => `
+                <div class="project-card">
+                    <div class="project-img" style="background: linear-gradient(45deg, ${project.color1}, ${project.color2});">
+                        <i class="${project.icon}"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3>${project.title}</h3>
+                        <p>${project.shortDescription}</p>
+                        <div class="tech-stack">
+                            ${project.techStack.slice(0, 3).map(tech => `
+                                <span class="tech">${tech}</span>
+                            `).join('')}
+                        </div>
+                        <a href="project.html?id=${project.id}" class="btn">Ver Projeto</a>
+                    </div>
+                </div>
+            `).join(''));
+        })
+        .catch(error => console.error('Error loading projects:', error));
+});

@@ -1,0 +1,171 @@
+[
+    {
+        "id": "vr-ap",
+        "title": "Gigante de Nazare VR",
+        "tagline": "Uma visita a um apartamento de luxo usando um oculos de realidade virtual.",
+        "icon": "fas fa-vr-cardboard",
+        "color1": "#6c5ce7",
+        "color2": "#2d00aa",
+        "shortDescription": "Uma visita a um apartamento de luxo usando um oculos de realidade virtual.",
+        "releaseDate": null,
+        "role": "Lead Developer",
+        "developmentTime": "2 semanas",
+        "downloads": null,
+        "liveLink": null,
+        "sourceLink": null,
+        "overview": "Foi um projeto idealizado com o objetivo de mostrar aos possíveis compradores como seria o apartamento escolhido, sem a necessidade um decorado físico. Modelamos o ambiente em 3D, tiramos renders 360, contruimos uma interface e fechamostudo isso numa aplicação de navegação para o Meta Quest 3",
+        "challenges": "A maior dificuldade foi conseguir entregar, de maneira excelente, todo o idealizado no curto periodo de desenvolvimento.",
+        "features": [
+            {
+                "icon": "fa-brands fa-facebook",
+                "title": "Meta SDK",
+                "description": "Integração completa da SDK do Meta para utilização de todas as features do Meta Quest 3."
+            },
+            {
+                "icon": "fa fa-location-dot",
+                "title": "Navegação 3D",
+                "description": "Implementação de um sistema de navegação completo para ir de comodo a comodo."
+            },
+            {
+                "icon": "fa fa-computer",
+                "title": "Sistema robusto e escalonável",
+                "description": "Navegação em 16 cenários com opções de ida e volta e um menu flutuante."
+            },
+            {
+                "icon": "fa fa-microchip",
+                "title": "Projeto leve e otimizado",
+                "description": "Todo o projeto não pesa nem 90mb."
+            }
+        ],
+        "techStack": ["Unity", "C#", "Meta SDK", "VR", "Blender"],
+        "version": null,
+        "size": "",
+        "rating": null,
+        "team": [
+            {
+                "name": "Anubis Alves",
+                "role": "Lead Dev",
+                "avatar": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%232d00aa'/><text fill='white' font-family='sans-serif' font-size='30' x='50%' y='55%' dominant-baseline='middle' text-anchor='middle'>AA</text></svg>"
+            },
+            {
+                "name": "Rafael Koiavinski",
+                "role": "Interface Designer",
+                "avatar": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%232d00aa'/><text fill='white' font-family='sans-serif' font-size='30' x='50%' y='55%' dominant-baseline='middle' text-anchor='middle'>RK</text></svg>"
+            },
+            {
+                "name": "Johannes Georg",
+                "role": "3D Artist",
+                "avatar": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%232d00aa'/><text fill='white' font-family='sans-serif' font-size='30' x='50%' y='55%' dominant-baseline='middle' text-anchor='middle'>JG</text></svg>"
+            }
+        ],
+        "awards": [
+        ],
+        "platforms": [
+        ],
+        "gallery": [
+            {
+                "type": "image",
+                "url": "imgs/gallery/nazare1.jpg",
+                "caption": "Render 360"
+            },
+            {
+                "type": "image",
+                "url": "imgs/gallery/nazare2.jpg",
+                "caption": "Render 360"
+            },
+            {
+                "type": "video",
+                "thumbnail": "imgs/gallery/nazare3.png",
+                "caption": "App video",
+                "videoUrl": "videos/nazare.mp4"
+            },
+            {
+                "type": "image",
+                "url": "imgs/gallery/nazare4.png",
+                "caption": "Sistema de navegação"
+            }
+        ]
+    },
+    {
+        "id": "globo-galeria",
+        "title": "Globo galeria de cinema",
+        "tagline": "O melhor do cinema brasileiro",
+        "icon": "fas fa-globe",
+        "color1": "#00cec9",
+        "color2": "#007a78",
+        "shortDescription": "7 decadas de globo em 50 filmes.",
+        "releaseDate": null,
+        "role": "Fullstack Developer",
+        "developmentTime": "1 mês",
+        "downloads": null,
+        "liveLink": "https://dev.primo.com.br/clientes/2021/globo-galeria/",
+        "sourceLink": null,
+        "overview": "Uma experiência imersiva nos maiores filmes do cinema brasileiro.<br>Uma página de navegação 360 com diversos jogos e gamificações, tais como:<br>- Quizzes<br>- Pintura<br>- Escreva sua carta",
+        "challenges": "Desenvolvimento e integração, do zero, das ferramentas e jogos necessários para a plataforma e demanda do cliente.",
+        "features": [
+            {
+                "icon": "fas fa-globe",
+                "title": "Navegação 360 responsiva",
+                "description": "Sistema de navegação em 360, pelo computador e celular"
+            },
+            {
+                "icon": "fas fa-dice",
+                "title": "Jogos e gamificações",
+                "description": "A plataforma contém quizzes e outras gamificações"
+            }
+        ],
+        "techStack": [
+            "HTML",
+            "JS",
+            "ThreeJS",
+            "CSS"
+        ],
+        "version": "",
+        "size": "",
+        "rating": "",
+        "team": [
+            {
+                "name": "Anubis Alves",
+                "role": "Fullstack Developer",
+                "avatar": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%232d00aa'/><text fill='white' font-family='sans-serif' font-size='30' x='50%' y='55%' dominant-baseline='middle' text-anchor='middle'>AA</text></svg>"
+            },
+            {
+                "name": "Daniel Carlos",
+                "role": "Backend Developer",
+                "avatar": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%232d00aa'/><text fill='white' font-family='sans-serif' font-size='30' x='50%' y='55%' dominant-baseline='middle' text-anchor='middle'>DC</text></svg>"
+            },
+            {
+                "name": "Alberto Neto",
+                "role": "Backend Developer",
+                "avatar": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%232d00aa'/><text fill='white' font-family='sans-serif' font-size='30' x='50%' y='55%' dominant-baseline='middle' text-anchor='middle'>AN</text></svg>"
+            }
+        ],
+        "awards": [
+        ],
+        "platforms": [
+        ],
+        "gallery": [
+            {
+                "type": "image",
+                "url": "imgs/gallery/galeria1.png",
+                "caption": "Mocap do site"
+            },
+            {
+                "type": "image",
+                "url": "imgs/gallery/galeria2.png",
+                "caption": "Mocap do site"
+            },
+            {
+                "type": "image",
+                "url": "imgs/gallery/galeria3.png",
+                "caption": "Quiz"
+            },
+            {
+                "type": "video",
+                "thumbnail": "imgs/gallery/galeria4.png",
+                "caption": "video",
+                "videoUrl": "https://www.youtube.com/G50XhOFiRoA"
+            }
+        ]
+    }
+]

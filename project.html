@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | Anubis Alves</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/project.css">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/libs/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">
+                    <i class="fas fa-gamepad"></i>
+                    Anubis Alves
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html#skills">Habilidades</a></li>
+                    <li><a href="index.html#projects">Projetos</a></li>
+                    <li><a href="index.html#about">Sobre</a></li>
+                    <li><a href="index.html#contact">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- Loading state -->
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+    </div>
+    
+    <!-- Error state -->
+    <div class="error-message" id="error" style="display: none;">
+        <i class="fas fa-exclamation-triangle fa-3x"></i>
+        <h2>Projeto não encontrado.</h2>
+        <p>A requisição não conseguiu ser concluída.</p>
+        <a href="index.html#projects" class="btn">Voltar aos projetos.</a>
+    </div>
+    
+    <!-- Project content (dynamically loaded) -->
+    <div id="project-content" style="display: none;">
+        <!-- Header -->
+        
+        <!-- Project Hero -->
+        <section class="project-hero">
+            <div id="particles-js"></div>
+            <!-- <div class="project-hero-bg"></div>
+            <div class="project-hero-overlay"></div> -->
+            <div class="container">
+                <div class="project-hero-content">
+                    <h1 id="project-title">Project Title</h1>
+                    <p id="project-tagline">Project tagline will appear here</p>
+                    
+                    <div class="project-meta" id="project-meta">
+                        <!-- Meta data will be populated by JS -->
+                    </div>
+                    
+                    <div class="btn-container" id="project-buttons">
+                        <!-- Buttons will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Project Content -->
+        <div class="container">
+            <div class="project-content">
+                <div class="project-main">
+                    <div class="project-details">
+                        <h2 class="section-title" id="overview-title">Visão Geral</h2>
+                        <p id="project-overview">Project overview will appear here...</p>
+                        
+                        <div id="features-section">
+                            <h2 class="section-title" id="features-title">Principais características</h2>
+                            <div class="features-grid" id="project-features">
+                                <!-- Features will be populated by JS -->
+                            </div>
+                        </div>
+                        
+                        <div id="challenges-section">
+                            <h2 class="section-title" id="challenges-title">Desafios de desenvolvimento</h2>
+                            <p id="project-challenges">Development challenges will appear here...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery" id="gallery-section">
+                        <h2 class="section-title">Galeria</h2>
+                        <div class="gallery-grid" id="project-gallery">
+                            <!-- Gallery items will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-sidebar">
+                    <div class="sidebar-card" id="project-details-card">
+                        <h3>Detalhes do projeto</h3>
+                        <div class="tech-stack" id="project-tech">
+                            <!-- Tech stack will be populated by JS -->
+                        </div>
+                        
+                        <div class="project-meta" id="project-meta-details">
+                            <!-- Meta details will be populated by JS -->
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-card" id="team-card">
+                        <h3>Equipe de desenvolvimento</h3>
+                        <div class="team-grid" id="project-team">
+                            <!-- Team members will be populated by JS -->
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-card" id="awards-card">
+                        <!-- Awards will be populated by JS -->
+                    </div>
+                    
+                    <div class="sidebar-card" id="download-card">
+                        <!-- Download buttons will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Video Modal -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <video id="projectVideo" controls autoplay>
+                <source src="videos/placeholder.mp4" type="video/mp4" id="videoSource">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+    <div id="galleryModal" class="modal">
+        <div class="modal-content">
+            <!-- Content will be inserted dynamically -->
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="social-links">
+                    <a href="https://github.com/anubishs" target="_blank"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/anubis-alves-154937a8/" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="https://x.com/anubishs" target="_blank"><i class="fa-brands fa-x"></i></a>
+                    <a href="https://www.instagram.com/anubishs/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/@anubishs" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+                <p class="copyright">© 2025 Anubis Alves. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="js/project.js"></script>
+</body>
+</html>

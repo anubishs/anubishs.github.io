@@ -1,0 +1,86 @@
+[
+    {
+        "id": "vr-explorer",
+        "title": "VR Space Explorer",
+        "tagline": "Immersive virtual reality experience",
+        "icon": "fas fa-vr-cardboard",
+        "color1": "#00cec9",
+        "color2": "#007a78",
+        "shortDescription": "VR experience exploring our solar system with educational content.",
+        "releaseDate": "August 2022",
+        "role": "VR Developer",
+        "developmentTime": "8 months",
+        "downloads": "25k+",
+        "liveLink": "https://store.steampowered.com",
+        "sourceLink": "https://github.com",
+        "overview": "VR Space Explorer takes players on an educational journey through our solar system with realistic planetary physics and interactive educational content. Developed using Unreal Engine with a focus on VR immersion.",
+        "challenges": "Optimizing the VR experience for consistent 90fps on mid-range hardware was challenging. We developed custom shaders and implemented adaptive resolution scaling to maintain performance without sacrificing visual quality.",
+        "features": [
+            {
+                "icon": "fas fa-vr-cardboard",
+                "title": "Immersive VR Experience",
+                "description": "Full 6DOF VR support with motion controller interaction."
+            },
+            {
+                "icon": "fas fa-atom",
+                "title": "Realistic Physics",
+                "description": "Accurate planetary orbits based on NASA data."
+            },
+            {
+                "icon": "fas fa-graduation-cap",
+                "title": "Educational Content",
+                "description": "Interactive lessons about each celestial body."
+            }
+        ],
+        "techStack": [
+            "Unreal Engine",
+            "C++",
+            "Oculus SDK",
+            "Blender"
+        ],
+        "version": "1.2.0",
+        "size": "4.2GB",
+        "rating": "4.7/5",
+        "team": [
+            {
+                "name": "Anubis Alves",
+                "role": "VR Developer",
+                "avatar": "img/team/anubis.jpg"
+            },
+            {
+                "name": "Liam T.",
+                "role": "3D Artist",
+                "avatar": "img/team/liam.jpg"
+            }
+        ],
+        "awards": [
+            "Best Educational VR Experience - VR Awards 2022",
+            "Innovation in Education - EdTech Awards"
+        ],
+        "platforms": [
+            {
+                "name": "SteamVR",
+                "icon": "fa-brands fa-steam",
+                "link": "#"
+            },
+            {
+                "name": "Oculus",
+                "icon": "fas fa-vr-cardboard",
+                "link": "#"
+            }
+        ],
+        "gallery": [
+            {
+                "type": "image",
+                "url": "img/gallery/vr1.jpg",
+                "caption": "Earth View"
+            },
+            {
+                "type": "video",
+                "thumbnail": "img/gallery/vr-video.jpg",
+                "caption": "Experience Trailer",
+                "videoUrl": "videos/vr-trailer.mp4"
+            }
+        ]
+    }
+]
