@@ -168,15 +168,14 @@
             }
         ]
     },
-    
     {
         "id": "volvo-td",
         "title": "Volvo Kinect",
-        "tagline": "Painel interativo com kinect",
+        "tagline": "Painel interativo com kinect.",
         "icon": "fas fa-car",
-        "color1": "#00cec9",
-        "color2": "#007a78",
-        "shortDescription": "Painel interativo em tempo real com kinect",
+        "color1": "#6c5ce7",
+        "color2": "#2d00aa",
+        "shortDescription": "Painel interativo em tempo real com kinect.",
         "releaseDate": null,
         "role": "Fullstack Developer",
         "developmentTime": "2 semanas",
@@ -239,6 +238,67 @@
                 "thumbnail": "imgs/gallery/volvo4.png",
                 "caption": "video",
                 "videoUrl": "videos/volvo.mp4"
+            }
+        ]
+    },
+    {
+        "id": "steck-genius",
+        "title": "Steck Genius",
+        "tagline": "TV Touch com game Genius reimaginado.",
+        "icon": "fas fa-puzzle-piece",
+        "color1": "#00cec9",
+        "color2": "#007a78",
+        "shortDescription": "TV Touch com game Genius reimaginado.",
+        "releaseDate": null,
+        "role": "Fullstack Developer",
+        "developmentTime": "1 semana",
+        "downloads": null,
+        "liveLink": "",
+        "sourceLink": null,
+        "overview": "Game desenvolvido na Unity, baseado no jogo Genius, onde você deve prestar atenção na sequência e repetir sem errar.",
+        "challenges": "Adaptação do jogo e mecânicas para um ambiente virtual.",
+        "features": [
+            {
+                "icon": "fas fa-tv",
+                "title": "Jogo Touch",
+                "description": "Jogo roda em um notebook simples conectado a uma TV com frame touch."
+            },
+            {
+                "icon": "fas fa-forward",
+                "title": "Rápido e Dinâmico",
+                "description": "Partidas rápidas, sem enrolação e sem fazer muita fila."
+            }
+        ],
+        "techStack": [
+            "Unity",
+            "Touch",
+            "C#"
+        ],
+        "version": "",
+        "size": "",
+        "rating": "",
+        "team": [
+            {
+                "name": "Anubis Alves",
+                "role": "Fullstack Developer",
+                "avatar": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%232d00aa'/><text fill='white' font-family='sans-serif' font-size='30' x='50%' y='55%' dominant-baseline='middle' text-anchor='middle'>AA</text></svg>"
+            }
+        ],
+        "awards": [
+        ],
+        "platforms": [
+        ],
+        "gallery": [
+            {
+                "type": "image",
+                "url": "imgs/gallery/lunare1.png",
+                "caption": "Tela do jogo"
+            },
+            {
+                "type": "video",
+                "thumbnail": "imgs/gallery/lunare2.jpg",
+                "caption": "video",
+                "videoUrl": "https://www.youtube.com/oNywuHOKeec"
             }
         ]
     }

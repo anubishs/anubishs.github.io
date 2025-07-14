@@ -127,7 +127,7 @@ $(document).ready(function() {
         .then(response => response.json())
         .then(projects => {
             const container = $('#projects-container');
-            container.html(projects.slice(0, 3).map(project => `
+            container.html(projects.slice(0, 6).map(project => `
                 <div class="project-card">
                     <div class="project-img" style="background: linear-gradient(45deg, ${project.color1}, ${project.color2});">
                         <i class="${project.icon}"></i>
@@ -136,7 +136,7 @@ $(document).ready(function() {
                         <h3>${project.title}</h3>
                         <p>${project.shortDescription}</p>
                         <div class="tech-stack">
-                            ${project.techStack.slice(0, 3).map(tech => `
+                            ${project.techStack.slice(0, 6).map(tech => `
                                 <span class="tech">${tech}</span>
                             `).join('')}
                         </div>
