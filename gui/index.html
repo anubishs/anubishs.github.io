@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WD Design</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
   <header>
     <video autoplay muted loop>
-      <source src="video/PortGuiLoop2.mp4" type="video/mp4">
+      <source src="video/PortGuiLoop.mp4" type="video/mp4">
       Seu navegador não suporta vídeos HTML5.
     </video>
     <div class="bg"></div>
@@ -39,7 +41,10 @@
     <div class="sobre sobre-flex">
       <div class="sobre-text">
         <h2>Sobre mim</h2>
-        <p>Designer com mais de 10 anos de experiência em projetos gráficos, digitais e audiovisuais. Atuo em áreas como Identidade Visual, Comunicação Interna, Web Design e Motion Design, com passagem por empresas de grande porte. Tenho formação em Design Gráfico e de Jogos pela Universidade Anhembi Morumbi, com complementação em Arte Digital e Desenvolvimento Full Stack.</p>
+        <p>Designer com mais de 10 anos de experiência em projetos gráficos, digitais e audiovisuais. Atuo em áreas como
+          Identidade Visual, Comunicação Interna, Web Design e Motion Design, com passagem por empresas de grande porte.
+          Tenho formação em Design Gráfico e de Jogos pela Universidade Anhembi Morumbi, com complementação em Arte
+          Digital e Desenvolvimento Full Stack.</p>
         <div class="tags">
           <span>Brand Design</span>
           <span>Web Design</span>
@@ -62,9 +67,24 @@
     <div class="recent-projects">
       <h2>Projetos recentes</h2>
       <div class="grid fixed-size">
-        <img src="img/Recente 1.png" alt="Projeto 1">
-        <img src="img/Recente 2.png" alt="Projeto 2">
-        <img src="img/Recente 3.jpg" alt="Projeto 3">
+        <div class="project">
+          <a href="https://www.behance.net/gallery/90438181/La-Macca-Maccaroneria-di-Gragnano" target="_blank">
+            <img src="img/Recente 1 Reduzido.jpg" alt="Projeto 1">
+          </a>
+        </div>
+
+        <div class="project">
+          <a href="https://www.behance.net/gallery/227461147/Site-Passoni-Clinic" target="_blank">
+            <img src="img/Recente 2 Reduzido.jpg" alt="Projeto 2">
+          </a>
+        </div>
+
+        <div class="project">
+          <a href="https://www.behance.net/gallery/163894099/Rovella-Schultz-Boutique-Press-Interactive-30-anos"
+            target="_blank">
+            <img src="img/Recente 3 Reduzido.jpg" alt="Projeto 3">
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -74,12 +94,38 @@
       <h2>Áreas em que atuo</h2>
       <div class="swiper-container">
         <div class="swiper-wrapper">
-          <div class="swiper-slide"><img src="img/Web design.jpg" alt="Web Design"></div>
-          <div class="swiper-slide"><img src="img/Motion.jpg" alt="Motion"></div>
-          <div class="swiper-slide"><img src="img/social media.jpg" alt="Social Media"></div>
-          <div class="swiper-slide"><img src="img/Design Gráfico.png" alt="Graphic Design"></div>
-          <div class="swiper-slide"><img src="img/Brand Product.jpg" alt="Brand Product"></div>
+          <div class="swiper-slide">
+            <div class="slide-content">
+              <img src="img/Web design reduzido.jpg" alt="Web Design">
+              <p class="hover-text">Web Design</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="slide-content">
+              <img src="img/Motion Reduzido.jpg" alt="Motion Design">
+              <p class="hover-text">Motion Design</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="slide-content">
+              <img src="img/social media Reduzido.jpg" alt="Social Media">
+              <p class="hover-text">Social Media</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="slide-content">
+              <img src="img/Design Gráfico Reduzido.jpg" alt="Graphic Design">
+              <p class="hover-text">Design Gráfico</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="slide-content">
+              <img src="img/Brand Product Reduzido.jpg" alt="Brand & Product">
+              <p class="hover-text">Brand & Product</p>
+            </div>
+          </div>
         </div>
+
         <div class="swiper-button-next"></div>
         <div class="swiper-button-prev"></div>
       </div>
@@ -87,26 +133,32 @@
   </section>
 
   <section id="contato" class="section dark contact">
-  <div class="contact-content" style="display:flex; flex-wrap: wrap; justify-content: space-between; max-width: 900px; margin: auto;">
-    <div class="contact-text" style="flex: 1 1 300px; padding-right: 20px; color: var(--text-light); text-align: left;">
-      <h2>Vamos trabalhar juntos?</h2>
-      <p>Juntos, temos o poder de projetar o mundo que imaginamos</p>
+    <div class="contact-content"
+      style="display:flex; flex-wrap: wrap; justify-content: space-between; max-width: 900px; margin: auto;">
+      <div class="contact-text"
+        style="flex: 1 1 300px; padding-right: 20px; color: var(--text-light); text-align: left;">
+        <h2>Vamos trabalhar juntos?</h2>
+        <p>Juntos, temos o poder de projetar o mundo que imaginamos</p>
+      </div>
+      <div class="contact-info" style="flex: 1 1 300px; color: var(--text-light); text-align: left;">
+        <p><i class="fas fa-envelope" style="padding-right: 5px;"></i> gwissenbach@hotmail.com</p>
+        <p><i class="fas fa-phone" style="padding-right: 5px;"></i> +55 (11) 99654-2130</p>
+      </div>
     </div>
-    <div class="contact-info" style="flex: 1 1 300px; color: var(--text-light); text-align: left;">
-      <p><strong>Email:</strong> gwissenbach@hotmail.com</p>
-      <p><strong>Telefone:</strong> +55 (11) 99654-2130</p>
-    </div>
-  </div>
-</section>
+  </section>
 
 
   <footer class="footer">
-    <a href="https://www.behance.net/gwissenbach" aria-label="Behance" target="_blank"><i class="fab fa-behance"></i></a>
-    <a href="https://www.linkedin.com/in/guilhermewissenbach/" aria-label="Linkedin" target="_blank"><i class="fab fa-linkedin"></i></a>
-    <a href="https://www.instagram.com/guiwf/" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.behance.net/gwissenbach" aria-label="Behance" target="_blank"><i
+        class="fab fa-behance"></i></a>
+    <a href="https://www.linkedin.com/in/guilhermewissenbach/" aria-label="Linkedin" target="_blank"><i
+        class="fab fa-linkedin"></i></a>
+    <a href="https://www.instagram.com/guiwf/" aria-label="Instagram" target="_blank"><i
+        class="fab fa-instagram"></i></a>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script src="js/script.js"></script>
 </body>
+
 </html>
