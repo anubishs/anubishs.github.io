@@ -13,6 +13,7 @@
         "downloads": null,
         "liveLink": null,
         "sourceLink": null,
+        "projectCover": "imgs/gallery/nazare1.jpg",
         "overview": "Foi um projeto idealizado com o objetivo de mostrar aos possíveis compradores como seria o apartamento escolhido, sem a necessidade um decorado físico. Modelamos o ambiente em 3D, tiramos renders 360, contruimos uma interface e fechamostudo isso numa aplicação de navegação para o Meta Quest 3",
         "challenges": "A maior dificuldade foi conseguir entregar, de maneira excelente, todo o idealizado no curto periodo de desenvolvimento.",
         "features": [
@@ -100,6 +101,7 @@
         "downloads": null,
         "liveLink": "https://dev.primo.com.br/clientes/2021/globo-galeria/",
         "sourceLink": null,
+        "projectCover": "imgs/gallery/galeria1.png",
         "overview": "Uma experiência imersiva nos maiores filmes do cinema brasileiro.<br>Uma página de navegação 360 com diversos jogos e gamificações, tais como:<br>- Quizzes<br>- Pintura<br>- Escreva sua carta",
         "challenges": "Desenvolvimento e integração, do zero, das ferramentas e jogos necessários para a plataforma e demanda do cliente.",
         "features": [
@@ -182,6 +184,7 @@
         "downloads": null,
         "liveLink": "",
         "sourceLink": null,
+        "projectCover": "imgs/gallery/volvo1.png",
         "overview": "Aplicação desenvolvida usando o TouchDesigner para a Volvo.<br>Utilizando o kinect para leitura e captura do movimento das pessoas, montei uma aplicação artistica em tempo real para representar o constante movimento da volto.",
         "challenges": "Primeira integração utilizando visual scripting.",
         "features": [
@@ -255,6 +258,7 @@
         "downloads": null,
         "liveLink": "",
         "sourceLink": null,
+        "projectCover": "imgs/gallery/lunare2.jpg",
         "overview": "Game desenvolvido na Unity, baseado no jogo Genius, onde você deve prestar atenção na sequência e repetir sem errar.",
         "challenges": "Adaptação do jogo e mecânicas para um ambiente virtual.",
         "features": [

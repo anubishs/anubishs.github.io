@@ -121,29 +121,44 @@ $('a[href^="#"]').on('click', function(e) {
 //     this.reset();
 // });
 
-$(document).ready(function() {
-    // Load projects from JSON
+$(document).ready(function () {
     fetch('data/projects.json')
         .then(response => response.json())
         .then(projects => {
             const container = $('#projects-container');
-            container.html(projects.slice(0, 6).map(project => `
-                <div class="project-card">
-                    <div class="project-img" style="background: linear-gradient(45deg, ${project.color1}, ${project.color2});">
-                        <i class="${project.icon}"></i>
-                    </div>
-                    <div class="project-content">
-                        <h3>${project.title}</h3>
-                        <p>${project.shortDescription}</p>
-                        <div class="tech-stack">
-                            ${project.techStack.slice(0, 6).map(tech => `
-                                <span class="tech">${tech}</span>
-                            `).join('')}
+
+            const projectCards = projects.slice(0, 6).map(project => {
+                const hasCover = Boolean(project.projectCover && project.projectCover.trim());
+                
+                const backgroundStyle = hasCover
+                    ? `background-image: url('${project.projectCover}'); background-size: cover; background-position: center;`
+                    : `background: linear-gradient(45deg, ${project.color1}, ${project.color2});`;
+
+                const iconMarkup = hasCover ? '' : `<i class="${project.icon}"></i>`;
+
+                const techStackMarkup = project.techStack
+                    .slice(0, 6)
+                    .map(tech => `<span class="tech">${tech}</span>`)
+                    .join('');
+
+                return `
+                    <div class="project-card">
+                        <div class="project-img" style="${backgroundStyle}">
+                            ${iconMarkup}
                         </div>
-                        <a href="project.html?id=${project.id}" class="btn">Ver Projeto</a>
+                        <div class="project-content">
+                            <h3>${project.title}</h3>
+                            <p>${project.shortDescription}</p>
+                            <div class="tech-stack">
+                                ${techStackMarkup}
+                            </div>
+                            <a href="project.html?id=${project.id}" class="btn">Ver Projeto</a>
+                        </div>
                     </div>
-                </div>
-            `).join(''));
+                `;
+            }).join('');
+
+            container.html(projectCards);
         })
         .catch(error => console.error('Error loading projects:', error));
 });
