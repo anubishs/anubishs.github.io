@@ -107,13 +107,13 @@
 
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
     gap: 30px;
 }
 .skills-grid-2 {
     margin-top: 2rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
     gap: 30px;
 }
 
@@ -309,6 +309,12 @@ textarea.form-control {
         margin-left: 0;
     }
     .projects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    .skills-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    .skills-grid-2 {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     }
 }
