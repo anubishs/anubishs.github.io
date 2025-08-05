@@ -308,4 +308,7 @@ textarea.form-control {
     .btn-outline {
         margin-left: 0;
     }
+    .projects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
 }
