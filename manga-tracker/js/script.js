@@ -1,3 +1,8 @@
+import { createClient } from 'npm:@supabase/supabase-js@2'
+const supabaseUrl = 'https://bjvxoipmvzyiarurthhj.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqdnhvaXBtdnp5aWFydXJ0aGhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1ODAzMTgsImV4cCI6MjA3MDE1NjMxOH0.-76MObuwwveLnITqzusR_r1S2vM9BMEnYfdZiwzf9UU'
+const supabase = createClient(supabaseUrl, supabaseKey)
+
 // Configurações da API do Google
 const GOOGLE_API_KEY = 'AIzaSyADAtYJz0IT0bnLZkiTSS0ND7MbwRbzqKo'; // Substitua pela sua chave
 const GOOGLE_CX = '1047ca13cc6044e1b'; // Substitua pelo seu Search Engine ID
@@ -31,24 +36,69 @@ function formatTimeAgo(date) {
 // Adiciona um novo mangá
 async function addManga() {
     const title = document.getElementById('manga-title').value.trim();
-    const chapter = document.getElementById('manga-chapter').value;
+    const chapter = parseInt(document.getElementById('manga-chapter').value);
     const link = document.getElementById('manga-link').value.trim() || "#";
     const coverUrlInput = document.getElementById('manga-cover-url').value.trim();
 
     if (title && chapter) {
-        // Se já tem uma URL de capa, adiciona diretamente
+        // Save to Supabase
+        try {
+            const user = JSON.parse(user);
+            const { data, error } = await supabase.from('user_readings').insert([{
+                email: user.email,
+                name: user.name,
+                manga_title: title,
+                chapter: chapter,
+                manga_cover: coverUrlInput,
+                link: link
+            }]);
+
+            if (error) {
+                console.error('Supabase insert error:', error);
+            } else {
+                console.log('Reading info saved:', data);
+            }
+        } catch (e) {
+            console.error('Error saving reading info:', e);
+        }
+
+        // Existing logic to add manga locally or search cover...
         if (coverUrlInput) {
             createMangaItem(title, chapter, link, coverUrlInput);
             return;
         }
-
-        // Senão, busca capas automaticamente
         currentManga = { title, chapter, link };
         await searchCovers(title);
+
     } else {
         alert("Preencha pelo menos o título e o capítulo!");
     }
 }
+
+async function loadFromSupabase() {
+    if (!user) return;
+    const { data, error } = await supabase
+        .from('user_readings')
+        .select('*')
+        .eq('email', user.email);
+
+    if (error) {
+        console.error('Error loading from Supabase:', error);
+        return;
+    }
+
+    mangas = data.map(entry => ({
+        id: Date.now() + Math.random(),
+        title: entry.manga_title,
+        chapter: entry.chapter,
+        link: entry.link,
+        coverUrl: entry.manga_cover,
+        updatedAt: entry.updated_at
+    }));
+
+    updateMangaList();
+}
+
 
 // Busca capas no Google Images
 async function searchCovers(title) {
@@ -121,18 +171,18 @@ function selectCover(url) {
 function createMangaItem(title, chapter, link, coverUrl) {
     const newManga = {
         id: Date.now(),
-        title: title,
-        chapter: chapter,
-        link: link,
+        title,
+        chapter,
+        link,
         coverUrl: coverUrl || 'https://via.placeholder.com/280x380?text=Sem+Capa',
         updatedAt: new Date().toISOString()
     };
 
     mangas.unshift(newManga);
-    saveToLocalStorage();
+    saveToSupabase();
     updateMangaList();
 
-    // Limpa os campos
+    // Reset inputs
     document.getElementById('manga-title').value = '';
     document.getElementById('manga-chapter').value = '';
     document.getElementById('manga-link').value = '';
@@ -148,7 +198,7 @@ function updateChapter(id) {
     if (newChapter && !isNaN(newChapter)) {
         manga.chapter = newChapter;
         manga.updatedAt = new Date().toISOString();
-        saveToLocalStorage();
+        saveToSupabase();
         updateMangaList();
     }
 }
@@ -157,15 +207,32 @@ function updateChapter(id) {
 function removeManga(id) {
     if (confirm(`Tem certeza que deseja remover este mangá da sua biblioteca?`)) {
         mangas = mangas.filter(m => m.id !== id);
-        saveToLocalStorage();
+        saveToSupabase();
         updateMangaList();
     }
 }
 
 // Salva no localStorage
-function saveToLocalStorage() {
-    localStorage.setItem('mangas', JSON.stringify(mangas));
+async function saveToSupabase() {
+    if (!user) return;
+    await supabase
+        .from('user_readings')
+        .delete()
+        .eq('email', user.email); // Clear existing entries for this user
+
+    for (const manga of mangas) {
+        await supabase.from('user_readings').insert([{
+            email: user.email,
+            name: user.name,
+            manga_title: manga.title,
+            chapter: manga.chapter,
+            manga_cover: manga.coverUrl,
+            link: manga.link,
+            updated_at: manga.updatedAt
+        }]);
+    }
 }
+
 
 // Atualiza a lista de mangás na tela
 function updateMangaList() {
@@ -262,40 +329,27 @@ function setupModalEvents() {
 // Inicializa a aplicação
 window.onload = function () {
     setupModalEvents();
-    updateMangaList();
+
+    if (user) {
+        loadFromSupabase();
+    } else {
+        console.log("User not logged in.");
+    }
 };
 
 
 function handleCredentialResponse(response) {
-    // The token contains the user's identity in JWT format
     const jwt = response.credential;
-
-    // Decode or send this JWT to your backend to verify & authenticate
-    console.log("JWT Token:", jwt);
-
-    // Example: display user info after decoding
     const base64Url = jwt.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 
-    const user = JSON.parse(jsonPayload);
-    console.log("User info:", user);
-    fetch('https://script.google.com/macros/s/AKfycbwRNF-zeayEacLNKJtk9K8iixcaYlXJ_BQCKqjgdAKUBvI6Q2bV_t8_iwPvx07f9fjf/exec', {
-        method: 'POST',
-        body: JSON.stringify({
-            name: user.name,
-            email: user.email,
-            picture: user.picture,
-            info: "log in"  // Add whatever info you want
-        }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(res => res.text())
-        .then(res => console.log('Google Sheet response:', res))
-        .catch(err => console.error('Error saving to Google Sheets:', err));
+    user = JSON.parse(jsonPayload);
+    console.log("Logged in as:", user);
 
+    // Load user's reading list
+    loadFromSupabase();
 }
+
