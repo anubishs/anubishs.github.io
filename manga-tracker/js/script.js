@@ -300,65 +300,106 @@ function updateMangaList() {
 
     if (mangas.length === 0) {
         listElement.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-book-open"></i>
-                        <h3>Sua biblioteca está vazia</h3>
-                        <p>Adicione seu primeiro mangá para começar</p>
-                    </div>`;
+            <div class="empty-state">
+                <i class="fas fa-book-open"></i>
+                <h3>Sua biblioteca está vazia</h3>
+                <p>Adicione seu primeiro mangá para começar</p>
+            </div>`;
         return;
     }
 
-    const sortedMangas = [...mangas];
-    const sortOption = sortSelect.value;
+const statusMap = {
+    'ongoing': ['ongoing', 'em andamento'],
+    'hiatus': ['hiatus', 'hiato'],
+    'finished': ['finished', 'concluído', 'concluido'] // sem acento também
+};
 
-    if (sortOption === 'title') {
-        sortedMangas.sort((a, b) => a.title.localeCompare(b.title));
-    } else if (sortOption === 'chapter') {
-        sortedMangas.sort((a, b) => b.chapter - a.chapter);
-    } else if (sortOption === 'status') {
-        const statusOrder = { 'ongoing': 1, 'hiatus': 2, 'finished': 3 };
-        sortedMangas.sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
-    } else {
-        sortedMangas.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+let filteredMangas = mangas.filter(manga => {
+    const titleMatch = manga.title.toLowerCase().includes(searchTerm);
+
+    // Normaliza o status e verifica se alguma tradução bate
+    const statusTranslations = statusMap[manga.status.toLowerCase()] || [];
+    const statusMatch = statusTranslations.some(term =>
+        term.toLowerCase().includes(searchTerm)
+    );
+
+    return titleMatch || statusMatch;
+});
+
+    if (filteredMangas.length === 0) {
+        listElement.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-search"></i>
+                <h3>Nenhum mangá encontrado</h3>
+                <p>Tente buscar por outro título</p>
+            </div>`;
+        return;
     }
 
-    sortedMangas.forEach(manga => {
+    // Ordenar após o filtro
+    const sortOption = sortSelect.value;
+    if (sortOption === 'title') {
+        filteredMangas.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sortOption === 'chapter') {
+        filteredMangas.sort((a, b) => b.chapter - a.chapter);
+    } else if (sortOption === 'status') {
+        const statusOrder = { 'ongoing': 1, 'hiatus': 2, 'finished': 3 };
+        filteredMangas.sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
+    } else {
+        filteredMangas.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    }
+
+    // Renderizar os mangás filtrados
+    filteredMangas.forEach(manga => {
         const mangaCard = document.createElement('div');
         mangaCard.className = 'manga-card';
-
-        // Status badge class
+        
         const statusClass = manga.status === 'hiatus' ? 'hiatus' :
             manga.status === 'finished' ? 'finished' : 'ongoing';
 
+        const readButton = manga.link && manga.link.trim() !== '#'
+            ? `<a href="${manga.link}" target="_blank" class="secondary-btn">
+                    <i class="fas fa-external-link-alt"></i> Ler
+               </a>`
+            : '';
+
         mangaCard.innerHTML = `
-                    <div class="manga-cover-container">
-                        <img src="${manga.coverUrl}" alt="${manga.title}" class="manga-cover"
-                             onerror="this.src='https://via.placeholder.com/280x380?text=Capa+Não+Disponível'">
-                        <div class="chapter-badge ${statusClass}">Cap. ${manga.chapter}</div>
-                        <div class="status-badge ${statusClass}">
-                            ${manga.status === 'ongoing' ? 'Em Andamento' :
-                manga.status === 'hiatus' ? 'Em Hiato' : 'Concluído'}
-                        </div>
-                    </div>
-                    <div class="manga-info">
-                        <h3 class="manga-title" title="${manga.title}">${manga.title}</h3>
-                        <div class="manga-meta">
-                            <span>${formatTimeAgo(manga.updatedAt)}</span>
-                        </div>
-                        <div class="manga-actions">
-                            <a href="${manga.link}" target="_blank" class="secondary-btn">
-                                <i class="fas fa-external-link-alt"></i> Ler
-                            </a>
-                            <button onclick="openEditModal('${manga.id}')" class="secondary-btn">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <button onclick="removeManga('${manga.id}')" class="secondary-btn">
-                                <i class="fas fa-trash"></i> Remover
-                            </button>
-                        </div>
-                    </div>`;
+            <div class="manga-cover-container">
+                <img src="${manga.coverUrl}" alt="${manga.title}" class="manga-cover"
+                     onerror="this.src='https://via.placeholder.com/280x380?text=Capa+Não+Disponível'">
+                <div class="chapter-badge ${statusClass}">Cap. ${manga.chapter}</div>
+                <div class="status-badge ${statusClass}">
+                    ${manga.status === 'ongoing' ? 'Em Andamento' :
+                      manga.status === 'hiatus' ? 'Em Hiato' : 'Concluído'}
+                </div>
+            </div>
+            <div class="manga-info">
+                <h3 class="manga-title" title="${manga.title}">${manga.title}</h3>
+                <div class="manga-meta">
+                    <span>${formatTimeAgo(manga.updatedAt)}</span>
+                </div>
+                <div class="manga-actions">
+                    ${readButton}
+                    <button onclick="openEditModal('${manga.id}')" class="secondary-btn">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button onclick="removeManga('${manga.id}')" class="secondary-btn">
+                        <i class="fas fa-trash"></i> Remover
+                    </button>
+                </div>
+            </div>`;
 
         listElement.appendChild(mangaCard);
+    });
+}
+
+const searchInput = document.getElementById('search-input');
+let searchTerm = '';
+
+if (searchInput) {
+    searchInput.addEventListener('input', () => {
+        searchTerm = searchInput.value.trim().toLowerCase();
+        updateMangaList();
     });
 }
 

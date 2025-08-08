@@ -411,6 +411,9 @@
             background: rgba(106, 85, 250, 0.3);
             transform: translateY(-2px);
         }
+        .search-container{
+            margin-bottom: 2rem;
+        }
         
         /* Empty State */
         .empty-state {
@@ -657,3 +660,4 @@
                 padding: 20px;
             }
         }
+        
