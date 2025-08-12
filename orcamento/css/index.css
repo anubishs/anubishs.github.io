@@ -1,0 +1,306 @@
+:root {
+    
+    --primary: #2980b6;
+    --secondary: #3099db;
+    --dark: #2c3d4e;
+    --darker: #131c25;
+    --light: #edf1f4;
+    --gray: #a0aec0;
+    --accent: #e44d3c;
+    --glass: rgba(255, 255, 255, 0.03)
+}
+
+* {
+    box-sizing: border-box;
+    font-family: Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(180deg, var(--darker) 0%, var(--darker) 100%);
+    color: var(--light);
+    padding: 28px
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto
+}
+
+header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 18px
+}
+
+.brand {
+    display: flex;
+    gap: 12px;
+    align-items: center
+}
+
+.logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background: var(--light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white
+}
+
+.logo img{
+    width: 80%;
+}
+h1 {
+    margin: 0;
+    font-size: 20px
+}
+
+p.lead {
+    margin: 0;
+    color: var(--gray)
+}
+
+.card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 6px 30px rgba(2, 6, 23, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.03)
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 18px;
+    margin-top: 18px
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    color: var(--gray);
+    margin-bottom: 6px
+}
+
+input[type=text],
+input[type=number],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: transparent;
+    color: inherit
+}
+
+.section.valores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+.valor-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.valor-label {
+  font-size: 12px;
+  color: #475569;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.section {
+    margin-bottom: 2rem
+}
+.values{
+    margin-bottom: 0;
+}
+
+.checkbox-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px
+}
+
+.option {
+    background: var(--glass);
+    padding: 10px;
+    border-radius: 10px;
+    width: 100%
+}
+
+.option input {
+    margin-right: 8px
+}
+
+.small {
+    font-size: 13px;
+    color: var(--gray)
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px
+}
+
+th,
+td {
+    padding: 8px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+    text-align: left
+}
+
+th {
+    color: var(--gray);
+    font-weight: 600
+}
+
+.total-box {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+    padding: 12px;
+    border-radius: 10px;
+    margin-top: 12px;
+    text-align: right
+}
+
+.big {
+    font-size: 22px;
+    font-weight: 700
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 12px
+}
+
+button {
+    cursor: pointer;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 0;
+    background: var(--accent);
+    color: white;
+    font-weight: 600
+}
+
+button.secondary {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.06)
+}
+
+.preview {
+    padding: 14px;
+    overflow: auto;
+    max-height: 720px
+}
+
+footer {
+    margin-top: 14px;
+    color: var(--gray);
+    font-size: 13px;
+    text-align: center
+}
+
+/* PDF invoice styling (for the printable area) */
+#invoice {
+    width: 800px;
+    background: white;
+    color: #0b1220;
+    padding: 28px;
+    border-radius: 8px
+}
+
+#invoice header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+}
+
+#invoice .brandpdf {
+    display: flex;
+    align-items: center;
+    gap: 12px
+}
+
+#invoice h2 {
+    margin: 0
+}
+
+#invoice .meta {
+    font-size: 12px;
+    color: #334155
+}
+
+#invoice table {
+    color: #111827
+}
+/* layout das checkboxes de detalhamento */
+.detalhe-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.detalhe-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #e6eef8;
+}
+
+.detalhe-item input[type="checkbox"] {
+  transform: scale(1.05);
+}
+
+/* Estilo do bloco que será inserido no PDF */
+#pdfDetalhes h4 {
+  color: #0b1220;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+#pdfDetalhesList > div {
+  margin-bottom: 8px;
+}
+
+#pdfDetalhesList strong {
+  display: block;
+  font-size: 13px;
+  color: #0b1220;
+}
+
+#pdfDetalhesList p {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  color: #334155;
+  line-height: 1.3;
+}
+
+/* Para impressão/pdf: garantir boa legibilidade */
+@media print {
+  #pdfDetalhesList p { color: #000; }
+}
+
+
+@media (max-width:900px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        justify-content: flex-start
+    }
+}

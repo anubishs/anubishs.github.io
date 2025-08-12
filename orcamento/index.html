@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gerador de Orçamento — Anubis Alves</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="brand">
+                <div class="logo"><img src="img/logo.png" alt=""></div>
+                <div>
+                    <h1>Anubis Alves — Gerador de Orçamento</h1>
+                    <p class="lead">Ferramenta para montar e exportar orçamentos de desenvolvimento de sites (exporta
+                        PDF)</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid">
+            <div class="card">
+                <div class="section">
+                    <label>Nome do cliente</label>
+                    <input id="cliente" type="text" placeholder="Nome da empresa / cliente" value="">
+                </div>
+                <div class="section">
+                    <label>Projeto</label>
+                    <input id="projeto" type="text" placeholder="Ex: Site institucional + blog" value="">
+                </div>
+
+                <div class="section">
+                    <label>Pontos incluídos (marque os que se aplicam)</label>
+                    <div class="checkbox-row">
+                        <label class="option"><input type="checkbox" data-key="setup"> Configuração inicial (repositório, ambiente)</label>
+                        <label class="option"><input type="checkbox" data-key="frontend"> Desenvolvimento front-end (HTML/CSS/JS, animações)</label>
+                        <label class="option"><input type="checkbox" data-key="backend"> Desenvolvimento back-end (Banco de dados, admin)</label>
+                        <label class="option"><input type="checkbox" data-key="seo"> SEO básico (meta tags, sitemap)</label>
+                        <label class="option"><input type="checkbox" data-key="tests"> Testes e ajustes (Usabilidade e Responsividade)</label>
+                        <label class="option"><input type="checkbox" data-key="domain"> Configuração de domínio & SSL</label>
+                        <label class="option"><input type="checkbox" data-key="hosting"> Suporte na contratação de hospedagem</label>
+                        <label class="option"><input type="checkbox" data-key="analytics"> Integrações (formulário, Google Analytics)</label>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <label>Quantidade de páginas</label>
+                    <select id="pages">
+                        <option value="1">1 página</option>
+                        <option value="2">2 páginas</option>
+                        <option value="3">3 páginas</option>
+                        <option value="4">4 páginas</option>
+                        <option value="5">5 páginas</option>
+                        <option value="other">Mais páginas</option>
+                    </select>
+                </div>
+
+                <div class="section">
+                    <label>Suporte pós-entrega (dias)</label>
+                    <input id="supportDays" type="number" min="0" value="15">
+                </div>
+
+                <div class="section">
+                    <label>Forma de pagamento (texto no orçamento)</label>
+                    <input id="paymentTerms" type="text" value="50% na assinatura, 50% na entrega">
+                </div>
+
+                <div class="section values">
+                    <label>Valor base / parâmetros</label>
+                </div>
+                <div class="section valores">
+
+                    <div class="valor-item">
+                        <span class="valor-label">Configuração inicial</span>
+                        <input id="valorSetup" type="number" value="300" placeholder="Configuração" />
+                    </div>
+
+                    <div class="valor-item">
+                        <span class="valor-label">Front-end</span>
+                        <input id="valorFront" type="number" value="900" placeholder="Front-end" />
+                    </div>
+
+                    <div class="valor-item">
+                        <span class="valor-label">Back-end</span>
+                        <input id="valorBack" type="number" value="1200" placeholder="Back-end" />
+                    </div>
+
+                    <div class="valor-item">
+                        <span class="valor-label">SEO básico</span>
+                        <input id="valorSeo" type="number" value="300" placeholder="SEO" />
+                    </div>
+
+                    <div class="valor-item">
+                        <span class="valor-label">Testes e ajustes</span>
+                        <input id="valorTests" type="number" value="200" placeholder="Testes" />
+                    </div>
+
+                    <div class="valor-item">
+                        <span class="valor-label">Configuração de domínio & SSL</span>
+                        <input id="valorDomain" type="number" value="200" placeholder="Config. domínio" />
+                    </div>
+
+                    <div class="valor-item">
+                        <span class="valor-label">Integrações</span>
+                        <input id="valorIntegracoes" type="number" value="300" placeholder="Integrações" />
+                    </div>
+
+                    <div class="valor-item">
+                        <span class="valor-label">Assistência de hospedagem</span>
+                        <input id="valorAssist" type="number" value="200" placeholder="Hospedagem" />
+                    </div>
+                </div>
+                
+                <div class="section" id="detalhamentoSection">
+                <label>Detalhamento de serviços (marque para incluir no PDF)</label>
+                <div class="detalhe-row">
+                    <label class="detalhe-item"><input type="checkbox" data-detail-key="setup"> Configuração inicial</label>
+                    <label class="detalhe-item"><input type="checkbox" data-detail-key="frontend"> Front-end</label>
+                    <label class="detalhe-item"><input type="checkbox" data-detail-key="backend"> Back-end</label>
+                    <label class="detalhe-item"><input type="checkbox" data-detail-key="seo"> SEO básico</label>
+                    <label class="detalhe-item"><input type="checkbox" data-detail-key="tests"> Testes e ajustes</label>
+                    <label class="detalhe-item"><input type="checkbox" data-detail-key="domain"> Domínio & SSL</label>
+                    <label class="detalhe-item"><input type="checkbox" data-detail-key="analytics"> Integrações (formulário/Analytics)</label>
+                    <label class="detalhe-item"><input type="checkbox" data-detail-key="hosting"> Assistência de hospedagem</label>
+                </div>
+                <div class="small">Marque para incluir a explicação do serviço no orçamento PDF.</div>
+                </div>
+
+
+                <div class="section">
+                    <label>Adendos / Itens customizados (adicione quantos quiser)</label>
+                    <div id="customList"></div>
+                    <div style="display:flex;gap:8px;margin-top:8px">
+                        <input id="customLabel" type="text" placeholder="Descrição do item (ex: Integração API)" />
+                        <input id="customValue" type="number" placeholder="Valor (R$)" />
+                        <button id="addCustom">Adicionar</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <label>Observações gerais (aparecerão no PDF)</label>
+                    <textarea id="observacoes"
+                        rows="3">Suporte técnico de 15 dias incluso. Não inclui criação de layout/design. Orçamento válido por 15 dias.</textarea>
+                </div>
+
+                <div class="actions">
+                    <button id="calc">Calcular Orçamento</button>
+                    <button class="secondary" id="previewBtn">Gerar Preview</button>
+                    <button id="exportPdf">Exportar PDF</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <h3>Resumo & Preview</h3>
+                    <div class="small">Arquivo: <span id="fileName">orcamento.pdf</span></div>
+                </div>
+
+                <div class="preview card" id="previewArea">
+                    <div id="invoice">
+                        <header>
+                            <div class="brandpdf">
+                                <div style="width:56px;height:56px;border-radius:10px;background:var(--darker);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:22px"><img src="img/logo-white.png" alt="" style="width: 90%;"></div>
+                                <div>
+                                    <h2>Anubis Alves</h2>
+                                    <div class="meta">Serviços de desenvolvimento web</div>
+                                </div>
+                            </div>
+                            <div style="text-align:right">
+                                <div id="metaDate" class="meta">Data: <span></span></div>
+                                <div id="metaValid" class="meta">Validade: 15 dias</div>
+                            </div>
+                        </header>
+
+                        <hr style="margin:12px 0;border:none;border-top:1px solid #e6eef8">
+
+                        <section>
+                            <strong>Cliente:</strong> <span id="pdfCliente">[Nome do cliente]</span><br>
+                            <strong>Projeto:</strong> <span id="pdfProjeto">Site Dinâmico com Área de Blog</span>
+                        </section>
+
+                        <table id="itemsTable" style="margin-top:12px">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Descrição</th>
+                                    <th style="text-align:right">Valor (R$)</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
+                        <div class="total-box">
+                            <div class="small">Condições: <span id="pdfPayment"></span></div>
+                            <div class="big">Total: R$ <span id="pdfTotal">0,00</span></div>
+                        </div>
+
+                        <!-- <div id="pdfDetalhes" style="margin-top:12px; display:none;">
+                        <h4 style="margin:0 0 8px 0;font-size:14px;">Detalhamento de Serviços</h4>
+                        <div id="pdfDetalhesList"></div>
+                        </div> -->
+                        <hr style="margin:12px 0;border:none;border-top:1px solid #e6eef8">
+                        <div class="small" id="pdfObs">Observações</div>
+                        <footer style="margin-top:18px;font-size:12px;color:#475569">Anubis Alves • Desenvolvimento web
+                            • anubishs@gmail.com</footer>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer class="small">Use a ferramenta para gerar propostas rápidas — personalize valores e textos antes de
+            enviar ao cliente.</footer>
+    </div>
+
+    <!-- Libraries: html2canvas + jsPDF via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>
