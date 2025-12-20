@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Calculadora de Custos de Impressão 3D</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --bg: #0f172a;
+        --card: #111827;
+        --border: #1f2937;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --accent: #22c5b8;
+        --accent-2: #166ba3;
+        --danger: #ef4444;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background: radial-gradient(circle at top, #1e293b, #020617);
+        font-family: "Inter", system-ui, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        color: var(--text);
+    }
+
+    .container {
+        width: 100%;
+        max-width: 520px;
+        background: linear-gradient(180deg, #020617, #020617) padding-box,
+                    linear-gradient(145deg, #22c55e33, #0ea5e933) border-box;
+        border: 1px solid transparent;
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+
+    h1 {
+        margin: 0 0 24px;
+        font-size: 1.6rem;
+        font-weight: 700;
+        text-align: center;
+        background: linear-gradient(90deg, #22c5b8, #166ba3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .field {
+        margin-bottom: 16px;
+    }
+
+    label {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 6px;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px 14px;
+        background: #020617;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input::placeholder {
+        color: #6b7280;
+    }
+
+    input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px #22c55e33;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 12px;
+        padding: 14px;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        color: var(--text);
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s;
+    }
+
+    button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 25px rgba(34,197,94,0.35);
+        opacity: 0.95;
+    }
+
+    button:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    .result {
+        margin-top: 24px;
+        padding: 18px;
+        background: linear-gradient(180deg, #020617, #020617) padding-box,
+                    linear-gradient(145deg, #22c55e55, #0ea5e955) border-box;
+        border: 1px solid transparent;
+        border-radius: 14px;
+        animation: fadeIn 0.25s ease;
+    }
+
+    .result p {
+        display: flex;
+        justify-content: space-between;
+        margin: 8px 0;
+        font-size: 0.95rem;
+    }
+
+    .result strong {
+        color: var(--muted);
+        font-weight: 500;
+    }
+
+    .result .total {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px dashed var(--border);
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Calculadora de Custos 3D</h1>
+
+    <div class="field">
+        <label for="filamentPrice">Preço do filamento (R$/kg)</label>
+        <input id="filamentPrice" type="number" placeholder="Ex: 100">
+    </div>
+
+    <div class="field">
+        <label for="filamentUsed">Filamento usado (g)</label>
+        <input id="filamentUsed" type="number" placeholder="Ex: 200">
+    </div>
+
+    <div class="field">
+        <label for="printHours">Tempo de impressão (horas)</label>
+        <input id="printHours" type="number" step="0.1" placeholder="Ex: 4">
+    </div>
+
+    <div class="field">
+        <label for="printerPower">Consumo da impressora (W)</label>
+        <input id="printerPower" type="number" value="100">
+    </div>
+
+    <div class="field">
+        <label for="energyRate">Custo do kWh (R$)</label>
+        <input id="energyRate" type="number" step="0.01" value="0.725">
+    </div>
+
+    <div class="field">
+        <label for="profitMargin">Margem de lucro (%)</label>
+        <input id="profitMargin" type="number" placeholder="Ex: 300">
+    </div>
+
+    <button onclick="calculateCosts()">Calcular custo</button>
+
+    <div id="output" class="result" style="display:none;"></div>
+</div>
+
+<script>
+function calculateCosts() {
+    const filamentPrice = parseFloat(document.getElementById("filamentPrice").value);
+    const filamentUsed = parseFloat(document.getElementById("filamentUsed").value);
+    const printHours = parseFloat(document.getElementById("printHours").value);
+    const printerPower = parseFloat(document.getElementById("printerPower").value);
+    const energyRate = parseFloat(document.getElementById("energyRate").value);
+    const profitMargin = parseFloat(document.getElementById("profitMargin").value);
+
+    if ([filamentPrice, filamentUsed, printHours, printerPower, energyRate, profitMargin].some(isNaN)) {
+        alert("Preencha todos os campos corretamente.");
+        return;
+    }
+
+    const costFilament = (filamentPrice / 1000) * filamentUsed;
+    const costEnergy = (printerPower / 1000) * printHours * energyRate;
+    const totalCost = costFilament + costEnergy;
+    const finalPrice = totalCost * (1 + profitMargin / 100);
+
+    output.style.display = "block";
+    output.innerHTML = `
+        <p><strong>Filamento</strong><span>R$ ${costFilament.toFixed(2)}</span></p>
+        <p><strong>Energia</strong><span>R$ ${costEnergy.toFixed(2)}</span></p>
+        <p><strong>Custo total</strong><span>R$ ${totalCost.toFixed(2)}</span></p>
+        <p class="total"><span>Preço final</span><span>R$ ${finalPrice.toFixed(2)}</span></p>
+    `;
+}
+</script>
+
+</body>
+</html>
