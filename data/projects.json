@@ -305,5 +305,217 @@
                 "videoUrl": "https://www.youtube.com/oNywuHOKeec"
             }
         ]
+    },
+    {
+        "id": "nba-house",
+        "title": "NBA House",
+        "tagline": "Basquete em uma gangorra.",
+        "icon": "fa-solid fa-basketball",
+        "color1": "#00cec9",
+        "color2": "#007a78",
+        "shortDescription": "Game de arcade com uma pegada super moderna.",
+        "releaseDate": null,
+        "role": "Fullstack Developer",
+        "developmentTime": "2 semanas",
+        "downloads": null,
+        "liveLink": "",
+        "sourceLink": null,
+        "projectCover": "imgs/gallery/nba-house1.png",
+        "overview": "Game desenvolvido na Unity, usando um notebook e um arduino. Temos um sensor em baixo da gangorra que detecta o subir e descer e 1 sensor no aro para detectar a marcação de ponto.",
+        "challenges": "Criação da mecânica e integração dos sensores + arduino ao jogo.",
+        "features": [
+            {
+                "icon": "fa-solid fa-basketball",
+                "title": "Interligação Arduino + Computador",
+                "description": "Um micro computador arduino faz a lógica de capturar os pontos ao dar uma 'gangorrada' e ao marcar um ponto no basquete. Esse arduino se comunica com a parte visual do jogo, fazendo tudo acontecer."
+            },
+            {
+                "icon": "fas fa-forward",
+                "title": "Rápido e Dinâmico",
+                "description": "Partidas rápidas, sem enrolação, seguindo a dinâmica do evento."
+            }
+        ],
+        "techStack": [
+            "Unity",
+            "Arduino",
+            "C#"
+        ],
+        "version": "",
+        "size": "",
+        "rating": "",
+        "team": [
+            {
+                "name": "Anubis Alves",
+                "role": "Fullstack Developer",
+                "avatar": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%232d00aa'/><text fill='white' font-family='sans-serif' font-size='30' x='50%' y='55%' dominant-baseline='middle' text-anchor='middle'>AA</text></svg>"
+            }
+        ],
+        "awards": [
+        ],
+        "platforms": [
+        ],
+        "gallery": [
+            {
+                "type": "image",
+                "url": "imgs/gallery/nba-house1.png",
+                "caption": "Tela do jogo"
+            },
+            {
+                "type": "image",
+                "url": "imgs/gallery/nba-house2.png",
+                "caption": "Pessoas Jogando"
+            },
+            {
+                "type": "image",
+                "url": "imgs/gallery/nba-house3.png",
+                "caption": "Pessoas Jogando"
+            },
+            {
+                "type": "video",
+                "thumbnail": "imgs/gallery/nba-house4.png",
+                "caption": "video",
+                "videoUrl": "https://www.youtube.com/tv3qoiLVUd4"
+            }
+        ]
+    },
+    {
+        "id": "itau-ion",
+        "title": "ITAU Touchless Quiz",
+        "tagline": "Um quiz usando somente as mãos, sem tocar em nada.",
+        "icon": "fa-solid fa-hand",
+        "color1": "#00cec9",
+        "color2": "#007a78",
+        "shortDescription": "Quiz sem touch, mas sem tocar em nada.",
+        "releaseDate": null,
+        "role": "Fullstack Developer",
+        "developmentTime": "2 semanas",
+        "downloads": null,
+        "liveLink": "",
+        "sourceLink": null,
+        "projectCover": "imgs/gallery/itau-ion1.png",
+        "overview": "Game desenvolvido na Unity, utilizando um sensor que detecta os movimentos das mãos.",
+        "challenges": "Interpretação dos movimentos das mãos e transição disso para controles dentro do jogo.",
+        "features": [
+            {
+                "icon": "fa-solid fa-hand",
+                "title": "Jogo sem contato",
+                "description": "Jogue sem tocar em telas ou colocar a mão em controles."
+            },
+            {
+                "icon": "fa-solid fa-computer",
+                "title": "Leve e rápido",
+                "description": "Jogo leve, consegue rodar um notebook relativamente simples."
+            }
+        ],
+        "techStack": [
+            "Unity",
+            "Leap Motion",
+            "C#"
+        ],
+        "version": "",
+        "size": "",
+        "rating": "",
+        "team": [
+            {
+                "name": "Anubis Alves",
+                "role": "Fullstack Developer",
+                "avatar": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%232d00aa'/><text fill='white' font-family='sans-serif' font-size='30' x='50%' y='55%' dominant-baseline='middle' text-anchor='middle'>AA</text></svg>"
+            },
+            {
+                "name": "Fabio Infanti",
+                "role": "Interface Designer",
+                "avatar": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%232d00aa'/><text fill='white' font-family='sans-serif' font-size='30' x='50%' y='55%' dominant-baseline='middle' text-anchor='middle'>FI</text></svg>"
+            }
+        ],
+        "awards": [
+        ],
+        "platforms": [
+        ],
+        "gallery": [
+            {
+                "type": "image",
+                "url": "imgs/gallery/itau-ion1.png",
+                "caption": "Tela do jogo"
+            },
+            {
+                "type": "video",
+                "thumbnail": "imgs/gallery/itau-ion2.png",
+                "caption": "video",
+                "videoUrl": "https://www.youtube.com/bwTzrCagzCI"
+            }
+        ]
+    },
+    {
+        "id": "swap-quest",
+        "title": "Swap VR",
+        "tagline": "Pegar as coisas com as mãos em realidade virtual.",
+        "icon": "fa-solid fa-hand",
+        "color1": "#00cec9",
+        "color2": "#007a78",
+        "shortDescription": "Fruit ninja de pegar cartões de crédito com as mãos.",
+        "releaseDate": null,
+        "role": "Fullstack Developer",
+        "developmentTime": "2 semanas",
+        "downloads": null,
+        "liveLink": "",
+        "sourceLink": null,
+        "projectCover": "imgs/gallery/swap1.png",
+        "overview": "Game para o Meta quest, desenvolvido na unity, onde você tem que pegar os cartões de crédito certos e evitar os da concorrência para fazer a maior quantidade de pontos no menor tempo.",
+        "challenges": "Criar um jogo rápido e dinânico, onde a pessoa não fique enjoada jogando.",
+        "features": [
+            {
+                "icon": "fa-brands fa-facebook",
+                "title": "Meta SDK",
+                "description": "Integração completa da SDK do Meta para utilização de todas as features do Meta Quest 3."
+            },
+            {
+                "icon": "fa-solid fa-gamepad",
+                "title": "Jogo rápido e divertido",
+                "description": "O jogo todo não leva nem 1 minuto do começo ao fim."
+            }
+        ],
+        "techStack": [
+            "Unity",
+            "Meta SDK",
+            "VR",
+            "C#"
+        ],
+        "version": "",
+        "size": "",
+        "rating": "",
+        "team": [
+            {
+                "name": "Anubis Alves",
+                "role": "Fullstack Developer",
+                "avatar": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%232d00aa'/><text fill='white' font-family='sans-serif' font-size='30' x='50%' y='55%' dominant-baseline='middle' text-anchor='middle'>AA</text></svg>"
+            }
+        ],
+        "awards": [
+        ],
+        "platforms": [
+        ],
+        "gallery": [
+            {
+                "type": "image",
+                "url": "imgs/gallery/swap1.png",
+                "caption": "Tela do jogo"
+            },
+            {
+                "type": "image",
+                "url": "imgs/gallery/swap2.png",
+                "caption": "Tela do jogo"
+            },
+            {
+                "type": "image",
+                "url": "imgs/gallery/swap3.png",
+                "caption": "Tela do jogo"
+            },
+            {
+                "type": "video",
+                "thumbnail": "imgs/gallery/swap4.png",
+                "caption": "video",
+                "videoUrl": "https://www.youtube.com/fQdWQQpyOwA"
+            }
+        ]
     }
 ]
