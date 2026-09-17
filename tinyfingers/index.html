@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#fff4c6" />
+    <title>Animal Keys — tiny hands, wild friends</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="playground" aria-label="Animal keyboard smash game">
+      <div class="grain"></div>
+      <div class="sun" aria-hidden="true"></div>
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Restart Animal Keys"><span>🐾</span> animal keys</a>
+        <div class="counter" aria-live="polite"><span>keys pounced</span><strong id="score">0</strong></div>
+      </header>
+
+      <section class="stage" aria-live="polite" aria-label="Animal display">
+        <p class="eyebrow">tap a key • meet a friend</p>
+        <div id="animal" class="animal" aria-hidden="true">🐶</div>
+        <h1 id="animalName">Hello, puppy!</h1>
+        <p id="animalLine" class="animal-line">Every key wakes up a new animal.</p>
+        <div class="sparkles" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i></div>
+      </section>
+
+      <p class="tap-hint">press any key or tap anywhere</p>
+
+      <footer>
+        <button id="sound" class="sound" type="button" aria-pressed="false"><span>🔈</span> sound off</button>
+        <p>Made for tiny fingers &amp; big imaginations</p>
+        <button id="fullscreen" class="fullscreen" type="button" aria-label="Toggle fullscreen">⤢</button>
+      </footer>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
