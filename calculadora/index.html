@@ -4,13 +4,21 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Calcule seus projetos de impressão 3D e prepare um orçamento para seu cliente.">
   <title>Calculadora 3D · Anubis Alves</title>
+  <meta name="theme-color" content="#101922">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Anubis 3D">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="assets/app-icon-192.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="stylesheet" href="styles.css">
+  <script src="pwa.mjs" type="module"></script>
   <script src="assets/jspdf.umd.min.js" defer></script><script src="app.js" type="module"></script>
 </head>
 <body>
   <header class="topbar"><a class="brand" href="./" aria-label="Anubis Alves, início"><img src="assets/logo-white.png" alt="" width="52" height="52"><span>Anubis Alves<small>Impressão 3D</small></span></a><span id="save-state" role="status">Rascunho salvo neste navegador</span></header>
   <main>
-    <div class="page-heading"><div><h1>Seu próximo projeto começa aqui.</h1><p>Calcule cada impressão. Reúna tudo em uma proposta.</p></div><div class="heading-actions"><button id="reset-proposal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.5 7M3 4v7h7"/></svg>Reiniciar proposta</button><button class="primary" id="add-project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Adicionar projeto</button></div></div>
+    <div class="page-heading"><div><h1>Seu próximo projeto começa aqui.</h1><p>Calcule cada impressão. Reúna tudo em uma proposta.</p></div><div class="heading-actions"><button id="install-app" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M5 16v5h14v-5"/></svg>Instalar app</button><button id="reset-proposal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.5 7M3 4v7h7"/></svg>Reiniciar proposta</button><button class="primary" id="add-project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Adicionar projeto</button></div></div>
     <nav class="view-tabs" aria-label="Visualização"><button id="calculator-tab" aria-pressed="true">Calculadora <span id="project-count">1</span></button><button id="quote-tab" aria-pressed="false">Proposta para o cliente<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H6V3h1M13 3v5h5M9 12h6M9 16h6"/></svg></button></nav>
     <section id="calculator-view" aria-label="Cálculo dos projetos">
       <div class="workspace"><div class="project-area"><div class="section-heading"><h2>Projetos</h2><span>Valores por unidade · cálculo em tempo real</span></div><div id="projects" class="projects"></div><button class="add-another" id="add-another"><span aria-hidden="true">+</span> Adicionar outro projeto</button></div>
