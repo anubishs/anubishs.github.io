@@ -1,4 +1,4 @@
-import {calculate} from './calc.mjs';
+import {calculate,proposalTotals} from './calc.mjs';
 import {loadDraft,saveDraft,normalizeDraft,validDraft} from './storage.mjs';
 import {prepareReference} from './images.mjs';
 import {createProject,createDraft,applyPrinterProfile,PRINTER_PROFILE} from './draft.mjs';
@@ -59,7 +59,7 @@ function projectMarkup(p,i){
 }
 function render(){
   $('projects').innerHTML=state.projects.map(projectMarkup).join('');$('project-count').textContent=state.projects.length;
-  for(const el of document.querySelectorAll('[data-meta]'))el.value=state.meta[el.dataset.meta];
+  for(const el of document.querySelectorAll('[data-meta]')){if(el.type==='checkbox')el.checked=state.meta[el.dataset.meta]!==false;else el.value=state.meta[el.dataset.meta];}
   update();
 }
 const selected=()=>state.projects.filter(p=>p.included);
@@ -86,9 +86,11 @@ function update(){
     if(p.included&&result){total+=result.total;cost+=result.totalCost;profit+=result.profit;services+=result.servicesTotal;rounding+=result.roundingAdjustment;}
   }
   $('summary-list').innerHTML=state.projects.map(p=>{const r=calculate(p);return `<label class="summary-item"><input type="checkbox" data-select="${esc(p.id)}" ${p.included?'checked':''}><span class="item-title">${esc(projectName(p,state.projects))}<small>${r?(p.printingEnabled?`${p.quantity} un. × ${money(r.unitPrice)}${p.extras.length?' + serviços':''}`:'Somente serviços'):'Preencha os dados do projeto'}</small></span><strong>${r?money(r.total):'—'}</strong></label>`;}).join('');
-  $('total-price').textContent=money(total);$('total-cost').textContent=money(cost);$('total-profit').textContent=money(profit);$('total-services').textContent=money(services);$('total-rounding').textContent=money(rounding);$('summary-rounding').hidden=!rounding;
+  const totals=proposalTotals(total,state.meta.discountPercent??0);
+  $('total-price').textContent=totals?money(totals.total):'—';$('total-cost').textContent=money(cost);$('total-profit').textContent=money(profit);$('total-services').textContent=money(services);$('total-rounding').textContent=money(rounding);$('summary-rounding').hidden=!rounding;
+  $('summary-discount').hidden=!totals?.discountPercent;$('summary-discount-label').textContent=`Desconto (${totals?.discountPercent??0}%)`;$('total-discount').textContent=totals?'− '+money(totals.discountAmount):'—';$('summary-discount-note').hidden=!totals?.discountPercent;
   const invalid=selected().some(p=>!calculate(p));$('prepare-quote').disabled=!selected().length;
-  const error=!selected().length?'Selecione pelo menos um projeto na calculadora.':invalid?'Complete os valores de todos os projetos selecionados antes de exportar.':!validMeta()?'Informe uma data válida e uma validade inteira entre 1 e 365 dias.':uploads?'Aguarde o processamento das imagens.':'';
+  const error=!selected().length?'Selecione pelo menos um projeto na calculadora.':invalid?'Complete os valores de todos os projetos selecionados antes de exportar.':!validMeta()?'Informe uma data válida e uma validade inteira entre 1 e 365 dias.':!totals?'Informe um desconto entre 0 e 100%.':uploads?'Aguarde o processamento das imagens.':'';
   $('quote-error').textContent=error;
   for(const id of ['export-pdf','copy-quote','download-html','print-quote'])$(id).disabled=!!error||exporting;
   $('quote-paper').innerHTML=quoteMarkup(data());
@@ -158,18 +160,19 @@ $('summary-list').addEventListener('change',event=>{
   const project=state.projects.find(p=>p.id===event.target.dataset.select);if(!project)return;
   project.included=event.target.checked;document.querySelector(`[data-id="${CSS.escape(project.id)}"] [data-field=included]`).checked=project.included;update();persist();
 });
-document.querySelectorAll('[data-meta]').forEach(element=>element.addEventListener('input',()=>{state.meta[element.dataset.meta]=element.value;update();persist();}));
+document.querySelectorAll('[data-meta]').forEach(element=>element.addEventListener('input',()=>{state.meta[element.dataset.meta]=element.type==='checkbox'?element.checked:element.value;update();persist();}));
 function download(content,name,type){const link=document.createElement('a');link.href=URL.createObjectURL(new Blob([content],{type}));link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(link.href),10000);}
 $('copy-quote').onclick=async()=>{try{await navigator.clipboard.writeText(textQuote(data()));toast('Proposta copiada. As imagens acompanham os arquivos PDF e HTML.');}catch{toast('Não foi possível copiar. Baixe o PDF ou HTML.');}};
 $('download-html').onclick=async()=>{
   exporting=true;update();const snapshot=data();
-  try{const logo=await imageData(),css=await(await fetch('styles.css')).text();download(`<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(snapshot.title)}</title><style>${css}\nbody{background:#edf1f4;padding:24px;color-scheme:light}.paper{max-width:850px;margin:auto}@media(max-width:600px){body{padding:10px}.paper{padding:20px}}@media print{body{padding:0}body>.paper{display:block!important}.paper{box-shadow:none}}</style><body><article class="paper">${quoteMarkup(snapshot,logo)}</article></body></html>`,`proposta-${fileName(snapshot.client)}.html`,'text/html;charset=utf-8');toast('Proposta HTML baixada com as imagens. Abre sem internet.');}catch{toast('Erro ao exportar. Tente baixar o PDF.');}finally{exporting=false;update();}
+  try{const logo=snapshot.includeBranding?await imageData():'',css=await(await fetch('styles.css')).text();download(`<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(snapshot.title)}</title><style>${css}\nbody{background:#edf1f4;padding:24px;color-scheme:light}.paper{max-width:850px;margin:auto}@media(max-width:600px){body{padding:10px}.paper{padding:20px}}@media print{body{padding:0}body>.paper{display:block!important}.paper{box-shadow:none}}</style><body><article class="paper">${quoteMarkup(snapshot,logo)}</article></body></html>`,`proposta-${fileName(snapshot.client)}.html`,'text/html;charset=utf-8');toast('Proposta HTML baixada com as imagens. Abre sem internet.');}catch{toast('Erro ao exportar. Tente baixar o PDF.');}finally{exporting=false;update();}
 };
 $('print-quote').onclick=()=>window.print();
 async function exportPdf(projects=selected()){
   if(uploads)return toast('Aguarde o processamento das imagens.');
   if(!projects.length||projects.some(p=>!calculate(p)))return toast('Complete os valores dos projetos antes de exportar.');
   if(!validMeta()){switchView(true);return toast('Confira a data e a validade da proposta.');}
+  if(!proposalTotals(0,state.meta.discountPercent??0)){switchView(true);return toast('Informe um desconto entre 0 e 100%.');}
   exporting=true;$('export-pdf').textContent='Gerando PDF…';update();
   const snapshot=data(projects),name=projects.length===1?projectName(projects[0],state.projects):snapshot.client;
   try{await createPdf(snapshot,`proposta-${fileName(name)}.pdf`);toast('PDF com serviços e referências pronto para enviar.');}

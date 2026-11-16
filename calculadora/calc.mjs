@@ -1,4 +1,11 @@
 export const num = v => v !== '' && v !== null && Number.isFinite(Number(v)) && Number(v) >= 0 ? Number(v) : null;
+export function proposalTotals(subtotal, discountPercent=0) {
+  if(num(subtotal)===null||num(discountPercent)===null||Number(discountPercent)>100)return null;
+  const subtotalCents=Math.round((Number(subtotal)+Number.EPSILON)*100);
+  if(!Number.isSafeInteger(subtotalCents))return null;
+  const discountCents=Math.round(subtotalCents*Number(discountPercent)/100);
+  return {subtotal:subtotalCents/100,discountPercent:Number(discountPercent),discountAmount:discountCents/100,total:(subtotalCents-discountCents)/100};
+}
 export function calculate(p) {
   const printing = p.printingEnabled !== false;
   const extras = p.extras ?? [];

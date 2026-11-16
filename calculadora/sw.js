@@ -1,6 +1,6 @@
 // Bump this version whenever the app shell changes. A waiting update activates
 // after the previous app windows close, without interrupting an active draft.
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SCOPE = self.registration.scope;
 const PREFIX = `anubis-calculadora:${new URL(SCOPE).pathname}:`;
 const CACHE = PREFIX + VERSION;

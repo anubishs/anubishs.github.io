@@ -40,7 +40,7 @@ export async function saveDraft(state) {
   }
 }
 export function normalizeDraft(state) {
-  return {...state, projects: state.projects.map(p => ({...p, filamentPrice:p.filamentPrice === '' ? 100 : p.filamentPrice, printingEnabled: p.printingEnabled !== false, depreciationRate:p.depreciationRate ?? 0, roundUnit:p.roundUnit === true, roundTotal:p.roundTotal === true, extras: p.extras ?? [], references: p.references ?? []}))};
+  return {...state,meta:{...state.meta,includeBranding:state.meta.includeBranding!==false,discountPercent:state.meta.discountPercent??0}, projects: state.projects.map(p => ({...p, filamentPrice:p.filamentPrice === '' ? 100 : p.filamentPrice, printingEnabled: p.printingEnabled !== false, depreciationRate:p.depreciationRate ?? 0, roundUnit:p.roundUnit === true, roundTotal:p.roundTotal === true, extras: p.extras ?? [], references: p.references ?? []}))};
 }
 export function validDraft(s) {
   if (!s || s.version !== 1 || !Array.isArray(s.projects) || !s.projects.length || s.projects.length > 100) return false;
@@ -57,5 +57,5 @@ export function validDraft(s) {
     imageCount += p.references?.length ?? 0;
     return true;
   }) || imageCount > 40 || new Set(s.projects.map(p=>p.id)).size !== s.projects.length) return false;
-  return s.meta && ['client','title','issued','payment','notes'].every(k => typeof s.meta[k] === 'string') && Number(s.meta.validity) >= 1 && Number(s.meta.validity) <= 365;
+  return s.meta && (s.meta.includeBranding===undefined||typeof s.meta.includeBranding==='boolean') && (s.meta.discountPercent===undefined||['string','number'].includes(typeof s.meta.discountPercent)) && ['client','title','issued','payment','notes'].every(k => typeof s.meta[k] === 'string') && Number(s.meta.validity) >= 1 && Number(s.meta.validity) <= 365;
 }
