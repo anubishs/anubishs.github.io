@@ -477,7 +477,7 @@ export const defaultList = {
       "note": ""
     },
     {
-      "id": "amigos-19",
+      "id": "amigos-20",
       "name": "Temkiro",
       "groupId": "amigos",
       "included": true,
