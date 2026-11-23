@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f9f5f4">
+  <meta name="description" content="Organize os convidados do seu aniversário. Inclua, edite e deixe pessoas fora da lista final sem apagar ninguém.">
+  <title>Lista de aniversário</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Pular para convidados</a>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="./" aria-label="Lista de aniversário — início"><span class="brand-mark" data-icon="cake"></span><span>festa<span class="brand-point">.</span></span></a>
+    <p class="sidebar-caption">Sua lista de gente querida</p>
+    <nav aria-label="Grupos de convidados" id="group-nav"></nav>
+    <button class="text-button manage" id="manage-groups"><span data-icon="sliders"></span> Organizar grupos</button>
+    <section class="sidebar-note"><span data-icon="heart"></span><h2>Todo mundo fica guardado.</h2><p>Deixe alguém fora da lista final e inclua de novo quando quiser.</p></section>
+    <div class="sidebar-footer"><span data-icon="device"></span><span>Salvo neste navegador</span></div>
+  </aside>
+  <main id="main">
+    <header class="topbar"><span id="event-title">Lista de aniversário</span><div class="save-tools"><span id="save-status" role="status">Lista pronta para editar</span><button class="icon-button" id="backup" aria-label="Baixar backup completo" title="Baixar backup completo"><span data-icon="download"></span></button><button class="icon-button" id="restore" aria-label="Restaurar backup" title="Restaurar backup"><span data-icon="upload"></span></button></div></header>
+    <section class="intro"><div><h1>A festa começa<br>com quem vem<span>.</span></h1><p>Reúna seus favoritos. A lista vai ganhando forma.</p></div><div class="party-art" aria-hidden="true"><svg viewBox="0 0 200 170" fill="none"><path d="M36 25l9 15M163 35l-9 13M103 6v15M14 82l17 3M171 97l16-6" stroke="#b34b57" stroke-width="5"/><circle cx="66" cy="17" r="5" fill="#c2aee1"/><circle cx="178" cy="64" r="5" fill="#e6b568"/><circle cx="22" cy="124" r="5" fill="#c2aee1"/><path d="M52 93a15 15 0 0 1 15-15h67a15 15 0 0 1 15 15v47H52z" fill="#dfbecb"/><path d="M52 98c10 0 10 12 20 12s10-12 19-12 10 12 20 12 10-12 19-12 9 12 19 12V92a14 14 0 0 0-14-14H66a14 14 0 0 0-14 14z" fill="#b34b57"/><path d="M43 141h114" stroke="#673345" stroke-width="5" stroke-linecap="round"/><path d="M80 76V55m40 21V55m-20 21V48" stroke="#673345" stroke-width="6"/><path d="M80 47c-11-9 0-17 0-17s11 8 0 17m40 0c-11-9 0-17 0-17s11 8 0 17m-20-7c-11-9 0-17 0-17s11 8 0 17" fill="#e6b568"/></svg></div></section>
+    <div id="storage-warning" class="notice" hidden></div>
+    <section id="group-manager" class="panel" hidden aria-labelledby="groups-heading"><div class="section-heading"><h2 id="groups-heading">Organizar grupos</h2><button class="icon-button" id="close-groups" aria-label="Fechar grupos"><span data-icon="close"></span></button></div><p class="muted">Renomeie os grupos ou crie um novo. Para mover uma pessoa, use “Editar”.</p><div id="group-fields"></div><form id="new-group-form" class="inline-form"><input aria-label="Nome do novo grupo" name="groupName" maxlength="100" placeholder="Nome do novo grupo" required><button type="submit" class="secondary">Criar grupo</button></form></section>
+    <section class="guest-workspace" aria-label="Gerenciar convidados">
+      <div class="workspace-heading"><div><h2 id="list-heading">Todos os convidados</h2><p id="selection-summary" aria-live="polite"></p></div><button class="primary" id="add-guest"><span data-icon="plus"></span> Adicionar pessoa</button></div>
+      <section id="add-panel" class="panel" hidden aria-labelledby="add-heading"><div class="section-heading"><h3 id="add-heading">Mais alguém para a festa?</h3><button class="icon-button" id="cancel-add" aria-label="Fechar inclusão"><span data-icon="close"></span></button></div><form id="add-form"><div class="form-grid"><label>Nome<input name="name" required maxlength="160" placeholder="Como a pessoa se chama?" autocomplete="off"></label><label>Grupo<select name="groupId" id="add-group"></select></label></div><label>Observação <span class="optional">(opcional)</span><input name="note" maxlength="1000" placeholder="Ex.: acompanhante da Pietra"></label><div class="form-bottom"><label class="check-label"><input type="checkbox" name="included" checked> Incluir na lista final</label><button class="primary" type="submit">Adicionar à lista</button></div></form></section>
+      <div class="tabs" role="tablist" aria-label="Visualização"><button role="tab" id="tab-all" data-view="all" aria-selected="true">Todos <span id="count-all"></span></button><button role="tab" id="tab-included" data-view="included" aria-selected="false">Na lista <span id="count-included"></span></button><button role="tab" id="tab-excluded" data-view="excluded" aria-selected="false">Fora da lista <span id="count-excluded"></span></button><button role="tab" id="tab-final" data-view="final" aria-selected="false"><span data-icon="list"></span> Lista final</button></div>
+      <div class="list-tools"><label class="search"><span data-icon="search"></span><input type="search" id="search" placeholder="Buscar por nome ou observação" aria-label="Buscar convidados"></label><label class="sort-label"><span>Ordenar:</span><select id="sort" aria-label="Ordenação"><option value="original">Sua ordem</option><option value="alpha">Nome (A–Z)</option></select></label></div>
+      <div id="final-tools" class="final-tools" hidden><p>Esta é a seleção de todos os grupos, pronta para compartilhar.</p><div><button class="secondary" id="copy-final"><span data-icon="copy"></span> Copiar</button><button class="secondary" id="csv-final"><span data-icon="download"></span> Baixar CSV</button><button class="secondary" id="print-final"><span data-icon="print"></span> Imprimir</button></div></div>
+      <div id="guest-list" role="tabpanel" aria-labelledby="tab-all"></div>
+      <footer class="list-footer"><p id="result-count"></p><p id="list-help">Tirar da lista não apaga o cadastro.</p></footer>
+    </section>
+    <footer class="page-footer"><span>Gente querida. Bons encontros.</span><span>Feito para celebrar.</span></footer>
+  </main>
+</div>
+<dialog id="edit-dialog" aria-labelledby="edit-heading"><form id="edit-form"><div class="section-heading"><h2 id="edit-heading">Editar pessoa</h2><button type="button" class="icon-button" id="cancel-edit" aria-label="Fechar edição"><span data-icon="close"></span></button></div><input type="hidden" name="id"><label>Nome<input name="name" required maxlength="160" autocomplete="off"></label><label>Grupo<select name="groupId" id="edit-group"></select></label><label>Observação <span class="optional">(opcional)</span><textarea name="note" maxlength="1000" rows="3"></textarea></label><label class="check-label"><input type="checkbox" name="included"> Incluir na lista final</label><div class="dialog-actions"><button type="button" class="secondary" id="discard-edit">Cancelar</button><button type="submit" class="primary">Salvar alterações</button></div></form></dialog>
+<dialog id="restore-dialog" aria-labelledby="restore-heading"><div class="section-heading"><h2 id="restore-heading">Restaurar backup?</h2><button class="icon-button" id="cancel-restore" aria-label="Cancelar restauração"><span data-icon="close"></span></button></div><p id="restore-description"></p><p>O backup substituirá a lista deste navegador. Baixe uma cópia da lista atual antes de continuar.</p><div class="dialog-actions"><button class="secondary" id="backup-before-restore">Baixar lista atual</button><button class="primary" id="confirm-restore">Restaurar lista</button></div></dialog>
+<input type="file" id="restore-file" accept=".json,application/json" hidden>
+<div id="toast" class="toast" role="status" hidden><span id="toast-message"></span><button id="undo" hidden>Desfazer</button><button class="icon-button" id="dismiss-toast" aria-label="Fechar aviso"><span data-icon="close"></span></button></div>
+<section id="print-area" aria-label="Lista para impressão"></section>
+<noscript>Ative o JavaScript no navegador para organizar sua lista de convidados.</noscript>
+<script type="module" src="app.js"></script>
+</body>
+</html>
