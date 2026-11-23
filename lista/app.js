@@ -1,20 +1,59 @@
-import {initialState,STORAGE_KEY,validateState,selectGuests,finalText,finalCSV} from './data.js';
+import {initialState,validateState,selectGuests} from './data.js';
+import {BirthdayApi} from './api-client.js';
+import {API_URL} from './api-config.js';
 
 const $=id=>document.getElementById(id);
 const icons={cake:'M3 11h18v10H3z M2 21h20 M7 11V6m5 5V5m5 6V6 M3 15c3 5 6-4 9 0s6-4 9 0 M7 3V2m5 0V1m5 2V2',plus:'M12 5v14M5 12h14',search:'m21 21-4.4-4.4M19 10.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0',check:'m5 12 4 4L19 6',minus:'M5 12h14',list:'M9 6h12M9 12h12M9 18h12M3 6h.01M3 12h.01M3 18h.01',close:'m6 6 12 12M6 18 18 6',heart:'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z',device:'M8 21h8m-4-4v4M3 3h18v14H3z',download:'M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5',upload:'M12 15V3m-5 5 5-5 5 5M4 16v5h16v-5',copy:'M9 9h12v12H9zM15 5V2H2v13h3',print:'M6 9V2h12v7M6 18H3V9h18v9h-3M6 15h12v7H6zM17 12h.01',up:'m6 15 6-6 6 6',down:'m6 9 6 6 6-6',sliders:'M4 3v7m0 4v7M12 3v11m0 4v3M20 3v3m0 4v11M1 10h6m2 8h6m2-12h6'};
+icons.refresh='M20 7v5h-5M4 17v-5h5M6.1 6.1a8 8 0 0 1 13.3 3M17.9 17.9a8 8 0 0 1-13.3-3';
 function icon(name){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${icons[name]||icons.list}"/></svg>`}
 function hydrateIcons(root=document){root.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon))}
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let state=initialState(),group='all',view='all',query='',sort='original',pendingRestore=null,undoAction=null,toastTimer;
-let storageBlocked=false;
-try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const parsed=JSON.parse(raw);if(!validateState(parsed))throw Error('Formato de lista inválido');state=parsed}}
-catch{storageBlocked=true;$('storage-warning').hidden=false;$('storage-warning').textContent='Não foi possível carregar a lista salva. Seus dados antigos serão preservados. Você pode trabalhar nesta sessão e baixar um backup, ou restaurar um backup válido.'}
+let ready=false,busy=false,pulling=false;
+const ACCESS_KEY_STORAGE='birthday-api-access-v1';
+let accessKey='';
+try{accessKey=localStorage.getItem(ACCESS_KEY_STORAGE)||''}catch{}
+const bootstrapKey=new URLSearchParams(location.hash.slice(1)).get('chave');
+if(bootstrapKey){accessKey=bootstrapKey;try{localStorage.setItem(ACCESS_KEY_STORAGE,bootstrapKey)}catch{}try{history.replaceState(null,'',location.pathname+location.search)}catch{location.hash=''}}
+const api=new BirthdayApi(API_URL,accessKey);
 
 function notify(message,undo=null){clearTimeout(toastTimer);$('toast-message').textContent=message;$('toast').hidden=false;$('undo').hidden=!undo;undoAction=undo;toastTimer=setTimeout(()=>$('toast').hidden=true,undo?12000:6500)}
-function persist(){
-  state.savedAt=new Date().toISOString();
-  try{if(storageBlocked)throw Error('Proteção do armazenamento');localStorage.setItem(STORAGE_KEY,JSON.stringify(state));$('save-status').textContent='Alterações salvas';}
-  catch{$('save-status').textContent='Backup recomendado';$('storage-warning').hidden=false;$('storage-warning').textContent='As alterações estão apenas nesta sessão. Baixe um backup completo no ícone de download do topo para guardar sua lista.'}
+function updateControls(){
+  const locked=!ready||busy;
+  document.querySelectorAll('#add-guest,#manage-groups,#backup,#restore,#add-form button[type=submit],#edit-form button[type=submit],#group-fields button,#new-group-form button,#confirm-restore,#copy-final,#csv-final,#print-final').forEach(b=>b.disabled=locked);
+  if(locked)$('guest-list').querySelectorAll('[data-action]').forEach(b=>b.disabled=true);
+  $('guest-list').setAttribute('aria-busy',String(busy||pulling));
+}
+function acceptState(incoming){
+  if(!validateState(incoming)||!Number.isSafeInteger(incoming.revision)||incoming.revision<1)throw Error('O servidor retornou uma lista inválida.');
+  if(incoming.revision<state.revision)return;
+  state=incoming;ready=true;
+  if(group!=='all'&&!state.groups.some(g=>g.id===group))group='all';
+}
+function reportError(error){
+  $('storage-warning').hidden=false;$('storage-warning').textContent=error.message||'Não foi possível acessar o servidor.';
+  $('save-status').textContent='Não sincronizado';
+  if(error.status===401){ready=false;$('connection-panel').hidden=false;$('save-status').textContent='Informe sua chave de acesso'}
+  updateControls();
+}
+async function loadState({silent=false}={}){
+  if(busy||pulling)return false;
+  if(!api.key){$('connection-panel').hidden=false;$('save-status').textContent='Informe sua chave de acesso';render();return false}
+  pulling=true;if(!silent)$('save-status').textContent='Atualizando…';updateControls();
+  try{acceptState(await api.getState());$('storage-warning').hidden=true;$('connection-panel').hidden=true;$('save-status').textContent='Sincronizado com o servidor';render();return true}
+  catch(error){reportError(error);return false}
+  finally{pulling=false;updateControls()}
+}
+async function commit(path,method,body){
+  if(!ready||busy)return null;
+  busy=true;$('save-status').textContent='Salvando no servidor…';updateControls();
+  try{
+    const result=await api.change(path,method,body,state.revision);acceptState(result);$('storage-warning').hidden=true;$('save-status').textContent='Salvo no servidor';return result;
+  }catch(error){
+    if(error.status===409){try{acceptState(await api.getState())}catch{}notify('A lista mudou em outro dispositivo. Confira os dados e tente novamente.')}
+    else if(!error.status){ready=false}
+    reportError(error);return null;
+  }finally{busy=false;render()}
 }
 function groupOptions(selected){return state.groups.map(g=>`<option value="${esc(g.id)}" ${g.id===selected?'selected':''}>${esc(g.name)}</option>`).join('')}
 function renderNavigation(){
@@ -55,14 +94,14 @@ function render(){
       const position=groupPeople.findIndex(item=>item.id===p.id);
       return `<div class="guest-row ${p.included?'':'excluded'} ${isFinal?'final-row':''}" data-id="${esc(p.id)}"><span class="row-number">${number}</span><div><div class="person-name">${esc(p.name)}</div>${p.note&&!isFinal?`<div class="person-note">${esc(p.note)}</div>`:''}</div>${isFinal?'':`<button class="status-toggle" data-action="toggle" aria-pressed="${p.included}" aria-label="${p.included?'Tirar':'Incluir'} ${esc(p.name)} ${p.included?'da':'na'} lista final">${icon(p.included?'check':'minus')} ${p.included?'Na lista':'Fora da lista'}</button><div class="row-actions"><button class="icon-button" data-action="up" ${position===0||sort==='alpha'?'disabled':''} aria-label="Subir ${esc(p.name)}" title="Subir na sua ordem">${icon('up')}</button><button class="icon-button" data-action="down" ${position===groupPeople.length-1||sort==='alpha'?'disabled':''} aria-label="Descer ${esc(p.name)}" title="Descer na sua ordem">${icon('down')}</button><button class="edit-button" data-action="edit" aria-label="Editar ${esc(p.name)}">Editar</button></div>`}</div>`;
     }).join('')}</section>`;
-  }).join('')||`<div class="empty"><h3>${isFinal?'A lista final ainda está vazia':query?'Nenhuma pessoa encontrada':view==='excluded'?'Ninguém ficou de fora':view==='included'?'Nenhuma pessoa incluída neste grupo':'Este grupo ainda está vazio'}</h3><p>${isFinal?'Volte à aba Todos e inclua quem vem à festa.':query?'Tente outro nome ou procure em todos os grupos.':view==='excluded'?'Quem você tirar da lista aparecerá aqui e poderá voltar a qualquer momento.':'Adicione uma pessoa ou mude sua seleção.'}</p></div>`;
+  }).join('')||`<div class="empty"><h3>${!ready?'Sua lista fica guardada no servidor':isFinal?'A lista final ainda está vazia':query?'Nenhuma pessoa encontrada':view==='excluded'?'Ninguém ficou de fora':view==='included'?'Nenhuma pessoa incluída neste grupo':'Este grupo ainda está vazio'}</h3><p>${!ready?'Conecte-se para carregar os convidados e organizar a festa.':isFinal?'Volte à aba Todos e inclua quem vem à festa.':query?'Tente outro nome ou procure em todos os grupos.':view==='excluded'?'Quem você tirar da lista aparecerá aqui e poderá voltar a qualquer momento.':'Adicione uma pessoa ou mude sua seleção.'}</p></div>`;
   $('result-count').textContent=`${people.length} ${people.length===1?'pessoa exibida':'pessoas exibidas'}`;
-  renderPrint();
+  renderPrint();updateControls();
 }
 function renderGroupManager(){
   $('group-fields').innerHTML=state.groups.map(g=>`<form class="group-field" data-id="${esc(g.id)}"><span class="group-dot" style="background:${g.color}"></span><input aria-label="Nome do grupo ${esc(g.name)}" name="name" value="${esc(g.name)}" required maxlength="100"><button class="secondary" type="submit">Salvar</button></form>`).join('');
 }
-function backup(){download(`aniversario-backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(state,null,2),'application/json');notify('Backup completo baixado, incluindo quem está fora da lista.')}
+async function backup(){if(!await loadState())return;download(`aniversario-backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(state,null,2),'application/json');notify('Backup do servidor baixado, incluindo quem está fora da lista.')}
 function download(filename,data,type){const url=URL.createObjectURL(new Blob([data],{type}));const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 
 $('group-nav').addEventListener('click',e=>{const button=e.target.closest('[data-group]');if(!button)return;group=button.dataset.group;if(view==='final')view='all';render()});
@@ -70,44 +109,55 @@ document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.cl
 document.querySelector('.tabs').addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const tabs=[...document.querySelectorAll('[data-view]')];const current=tabs.indexOf(document.activeElement);const target=e.key==='Home'?0:e.key==='End'?tabs.length-1:(current+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;tabs[target].click()});
 $('search').addEventListener('input',e=>{query=e.target.value;render()});
 $('sort').addEventListener('change',e=>{sort=e.target.value;render()});
-$('add-guest').onclick=()=>{$('add-group').innerHTML=groupOptions(group==='all'?state.groups[0].id:group);$('add-panel').hidden=false;$('add-form').elements.name.focus()};
+
+$('add-guest').onclick=()=>{if(!ready||busy)return;$('add-group').innerHTML=groupOptions(group==='all'?state.groups[0].id:group);$('add-panel').hidden=false;$('add-form').elements.name.focus()};
 $('cancel-add').onclick=()=>{$('add-panel').hidden=true;$('add-guest').focus()};
-$('add-form').onsubmit=e=>{
+$('add-form').onsubmit=async e=>{
   e.preventDefault();const form=e.currentTarget;const name=form.elements.name.value.trim();if(!name){form.elements.name.setCustomValidity('Preencha o nome da pessoa.');form.elements.name.reportValidity();return}
-  const person={id:crypto.randomUUID(),name,groupId:form.elements.groupId.value,note:form.elements.note.value.trim(),included:form.elements.included.checked};
-  state.guests.push(person);group=person.groupId;view='all';query='';$('search').value='';persist();render();form.reset();$('add-panel').hidden=true;notify(`${name} foi adicionado(a).`);$('add-guest').focus();
+  const body={name,groupId:form.elements.groupId.value,note:form.elements.note.value.trim(),included:form.elements.included.checked};
+  const result=await commit('/guests','POST',body);if(!result)return;
+  group=body.groupId;view='all';query='';$('search').value='';render();form.reset();$('add-panel').hidden=true;notify(`${name} foi adicionado(a).`);$('add-guest').focus();
 };
 $('add-form').elements.name.addEventListener('input',e=>e.target.setCustomValidity(''));
-$('guest-list').addEventListener('click',e=>{
-  const button=e.target.closest('[data-action]');if(!button)return;const id=button.closest('[data-id]').dataset.id;const person=state.guests.find(p=>p.id===id);const action=button.dataset.action;
+$('guest-list').addEventListener('click',async e=>{
+  const button=e.target.closest('[data-action]');if(!button||!ready||busy)return;const id=button.closest('[data-id]').dataset.id;const person=state.guests.find(p=>p.id===id);const action=button.dataset.action;
   if(action==='toggle'){
-    person.included=!person.included;const nowIncluded=person.included;persist();render();
-    notify(nowIncluded?`${person.name} voltou para a lista final.`:`${person.name} ficou fora da lista final. Cadastro mantido.`,()=>{person.included=!nowIncluded;persist();render();notify('Alteração desfeita.')});
+    const oldIncluded=person.included;const name=person.name;
+    if(!await commit('/guests/'+encodeURIComponent(id),'PATCH',{included:!oldIncluded}))return;
+    notify(oldIncluded?`${name} ficou fora da lista final. Cadastro mantido.`:`${name} voltou para a lista final.`,async()=>{if(await commit('/guests/'+encodeURIComponent(id),'PATCH',{included:oldIncluded}))notify('Alteração desfeita.')});
     const replacement=[...$('guest-list').querySelectorAll('[data-id]')].find(el=>el.dataset.id===id);replacement?.querySelector('[data-action=toggle]')?.focus({preventScroll:true});
   }else if(action==='edit'){
     const form=$('edit-form');form.elements.id.value=person.id;form.elements.name.value=person.name;$('edit-group').innerHTML=groupOptions(person.groupId);form.elements.note.value=person.note;form.elements.included.checked=person.included;$('edit-dialog').showModal();form.elements.name.focus();
   }else{
-    const members=state.guests.filter(p=>p.groupId===person.groupId);const index=members.indexOf(person);const other=members[index+(action==='up'?-1:1)];if(!other)return;const a=state.guests.indexOf(person),b=state.guests.indexOf(other);[state.guests[a],state.guests[b]]=[state.guests[b],state.guests[a]];persist();render();
+    if(!await commit('/guests/'+encodeURIComponent(id)+'/move','POST',{direction:action}))return;
     const replacement=[...$('guest-list').querySelectorAll('[data-id]')].find(el=>el.dataset.id===id);replacement?.querySelector(`[data-action=${action}]`)?.focus({preventScroll:true});
   }
 });
-$('edit-form').onsubmit=e=>{e.preventDefault();const form=e.currentTarget;const name=form.elements.name.value.trim();if(!name){form.elements.name.setCustomValidity('Preencha o nome da pessoa.');form.elements.name.reportValidity();return}const person=state.guests.find(p=>p.id===form.elements.id.value);Object.assign(person,{name,groupId:form.elements.groupId.value,note:form.elements.note.value.trim(),included:form.elements.included.checked});persist();render();$('edit-dialog').close();notify('Cadastro atualizado.')};
+$('edit-form').onsubmit=async e=>{
+  e.preventDefault();const form=e.currentTarget;const name=form.elements.name.value.trim();if(!name){form.elements.name.setCustomValidity('Preencha o nome da pessoa.');form.elements.name.reportValidity();return}
+  const result=await commit('/guests/'+encodeURIComponent(form.elements.id.value),'PATCH',{name,groupId:form.elements.groupId.value,note:form.elements.note.value.trim(),included:form.elements.included.checked});
+  if(result){$('edit-dialog').close();notify('Cadastro atualizado no servidor.')}
+};
 $('edit-form').elements.name.addEventListener('input',e=>e.target.setCustomValidity(''));
 $('cancel-edit').onclick=$('discard-edit').onclick=()=>$('edit-dialog').close();
-$('manage-groups').onclick=()=>{$('group-manager').hidden=!$('group-manager').hidden;if(!$('group-manager').hidden){renderGroupManager();$('group-manager').scrollIntoView({block:'start',behavior:'instant'});$('group-fields').querySelector('input').focus()}};
+$('manage-groups').onclick=()=>{if(!ready||busy)return;$('group-manager').hidden=!$('group-manager').hidden;if(!$('group-manager').hidden){renderGroupManager();$('group-manager').scrollIntoView({block:'start',behavior:'instant'});$('group-fields').querySelector('input').focus()}};
 $('close-groups').onclick=()=>{$('group-manager').hidden=true;$('manage-groups').focus()};
-$('group-fields').onsubmit=e=>{e.preventDefault();const form=e.target;const name=form.elements.name.value.trim();if(!name){notify('Digite um nome para o grupo.');return}state.groups.find(g=>g.id===form.dataset.id).name=name;persist();render();notify('Nome do grupo atualizado.')};
-$('new-group-form').onsubmit=e=>{e.preventDefault();const input=e.currentTarget.elements.groupName;const name=input.value.trim();if(!name)return;const colors=['#ae4053','#9b562c','#6656a0','#307260','#326d9a','#795d32'];const newGroup={id:crypto.randomUUID(),name,color:colors[state.groups.length%colors.length]};state.groups.push(newGroup);group=newGroup.id;view='all';input.value='';persist();render();renderGroupManager();notify('Grupo criado. Você já pode adicionar pessoas.')};
+$('group-fields').onsubmit=async e=>{e.preventDefault();const form=e.target;const name=form.elements.name.value.trim();if(!name){notify('Digite um nome para o grupo.');return}if(await commit('/groups/'+encodeURIComponent(form.dataset.id),'PATCH',{name})){renderGroupManager();notify('Nome do grupo atualizado no servidor.')}};
+$('new-group-form').onsubmit=async e=>{e.preventDefault();const input=e.currentTarget.elements.groupName;const name=input.value.trim();if(!name)return;const result=await commit('/groups','POST',{name});if(result){group=result.changedId;view='all';input.value='';render();renderGroupManager();notify('Grupo criado. Você já pode adicionar pessoas.')}};
 $('backup').onclick=$('backup-before-restore').onclick=backup;
-$('restore').onclick=()=>$('restore-file').click();
-$('restore-file').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>8000000)throw Error('Arquivo muito grande');const imported=JSON.parse(await file.text());if(!validateState(imported))throw Error('Backup inválido');pendingRestore=imported;$('restore-description').textContent=`O arquivo contém ${imported.guests.length} pessoas e ${imported.groups.length} grupos.`;$('restore-dialog').showModal()}catch{notify('Arquivo inválido. Selecione um backup JSON baixado nesta página.')}finally{e.target.value=''}};
+$('restore').onclick=()=>{if(ready&&!busy)$('restore-file').click()};
+$('restore-file').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>2000000)throw Error('Arquivo muito grande');const imported=JSON.parse(await file.text());if(!validateState(imported))throw Error('Backup inválido');pendingRestore=imported;$('restore-description').textContent=`O arquivo contém ${imported.guests.length} pessoas e ${imported.groups.length} grupos.`;$('restore-dialog').showModal()}catch{notify('Arquivo inválido. Selecione um backup JSON baixado nesta página.')}finally{e.target.value=''}};
 $('cancel-restore').onclick=()=>{pendingRestore=null;$('restore-dialog').close()};
-$('confirm-restore').onclick=()=>{if(!pendingRestore)return;state=pendingRestore;pendingRestore=null;storageBlocked=false;group='all';view='all';query='';$('search').value='';$('storage-warning').hidden=true;persist();render();if(!$('group-manager').hidden)renderGroupManager();$('restore-dialog').close();notify('Backup restaurado com todos os cadastros.')};
-$('copy-final').onclick=async()=>{try{await navigator.clipboard.writeText(finalText(state));notify('Lista final copiada. É só colar e compartilhar.')}catch{download('lista-final.txt',finalText(state),'text/plain;charset=utf-8');notify('O navegador bloqueou a cópia. A lista foi baixada como texto.')}};
-$('csv-final').onclick=()=>{download('lista-final.csv',finalCSV(state),'text/csv;charset=utf-8');notify('Lista final baixada. O CSV abre em uma planilha.')};
-$('print-final').onclick=()=>{renderPrint();window.print()};
+$('confirm-restore').onclick=async()=>{if(!pendingRestore)return;if(await commit('/restore','POST',{state:pendingRestore})){pendingRestore=null;group='all';view='all';query='';$('search').value='';render();if(!$('group-manager').hidden)renderGroupManager();$('restore-dialog').close();notify('Backup aplicado. Todos os cadastros foram preservados.')}};
+$('copy-final').onclick=async()=>{try{const text=await api.export('text');try{await navigator.clipboard.writeText(text);notify('Lista final copiada. É só colar e compartilhar.')}catch{download('lista-final.txt',text,'text/plain;charset=utf-8');notify('O navegador bloqueou a cópia. A lista foi baixada como texto.')}}catch(error){reportError(error)}};
+$('csv-final').onclick=async()=>{try{download('lista-final.csv',await api.export('csv'),'text/csv;charset=utf-8');notify('Lista final do servidor baixada. O CSV abre em uma planilha.')}catch(error){reportError(error)}};
+$('print-final').onclick=async()=>{if(await loadState()){renderPrint();window.print()}};
 window.addEventListener('beforeprint',renderPrint);
 $('undo').onclick=()=>{const action=undoAction;undoAction=null;if(action)action()};
 $('dismiss-toast').onclick=()=>$('toast').hidden=true;
-window.addEventListener('storage',e=>{if(e.key!==STORAGE_KEY||!e.newValue)return;try{const updated=JSON.parse(e.newValue);if(validateState(updated)){state=updated;if(!state.groups.some(g=>g.id===group))group='all';render();if(!$('group-manager').hidden)renderGroupManager();$('save-status').textContent='Lista atualizada em outra aba'}}catch{}});
-hydrateIcons();render();if(state.savedAt)$('save-status').textContent='Alterações salvas';else if(!storageBlocked){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));$('save-status').textContent='Lista salva neste navegador'}catch{$('save-status').textContent='Backup recomendado';$('storage-warning').hidden=false;$('storage-warning').textContent='O navegador não permitiu salvar a lista. Baixe um backup antes de fechar esta página.'}}
+$('sync-now').onclick=()=>loadState();
+$('connection-form').onsubmit=async e=>{e.preventDefault();const form=e.currentTarget;api.key=form.elements.accessKey.value.trim();$('save-status').textContent='Conectando…';if(await loadState()){try{if(form.elements.remember.checked)localStorage.setItem(ACCESS_KEY_STORAGE,api.key);else localStorage.removeItem(ACCESS_KEY_STORAGE)}catch{}form.reset();notify('Conectado. Sua lista agora é salva no servidor.')}};
+window.addEventListener('focus',()=>{if(api.key&&!busy&&$('edit-dialog').open===false&&$('add-panel').hidden)loadState({silent:true})});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&api.key&&!busy&&!$('edit-dialog').open&&$('add-panel').hidden)loadState({silent:true})});
+setInterval(()=>{if(!document.hidden&&api.key&&!busy&&!$('edit-dialog').open&&$('add-panel').hidden&&!$('restore-dialog').open&&$('group-manager').hidden)loadState({silent:true})},60000);
+hydrateIcons();render();loadState();
