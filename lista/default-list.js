@@ -477,6 +477,13 @@ export const defaultList = {
       "note": ""
     },
     {
+      "id": "amigos-19",
+      "name": "Temkiro",
+      "groupId": "amigos",
+      "included": true,
+      "note": ""
+    },
+    {
       "id": "extras-0",
       "name": "Vanessa",
       "groupId": "extras",
