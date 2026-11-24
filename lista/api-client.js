@@ -18,5 +18,8 @@ export class BirthdayApi {
   }
   getState(){return this.request('/state')}
   change(path,method,body,revision){return this.request(path,{method,body:{...body,revision}})}
-  export(format){return this.request('/final?format='+encodeURIComponent(format),{format:'text'})}
+  export(format,scope='final'){
+    if(!['final','confirmed'].includes(scope))throw new ApiRequestError('Lista de exportação inválida.',422,'invalid_scope');
+    return this.request('/'+scope+'?format='+encodeURIComponent(format),{format:'text'});
+  }
 }
